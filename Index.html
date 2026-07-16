@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Banner Bank</title>
+  <meta name="description" content="Access your Banner Bank Online Banking account securely.">
+  <link rel="icon" href="Icon.png" type="image/png">
+  <style>
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #09477e 0%, #0e5695 35%, #166aa2 55%, #0e5695 75%, #09477e 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow-y: auto;
+    }
+
+    /* FDIC Top Bar */
+    .fdic-bar {
+      width: 100%;
+      background-color: rgba(0, 37, 76, 0.4);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 500;
+      box-sizing: border-box;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .fdic-icon {
+      border: 1px solid #ffffff;
+      border-radius: 2px;
+      padding: 1px 4px;
+      font-size: 9px;
+      font-weight: 800;
+      margin-right: 8px;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      line-height: 1;
+    }
+
+    /* Main Container */
+    .main-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Login Card */
+    .login-card {
+      width: 430px;
+      max-width: 100%;
+      background-color: #f3f4f6;
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Card Header */
+    .card-header {
+      background-color: #003E7E;
+      padding: 28px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Card Body */
+    .card-body {
+      padding: 32px 36px;
+      box-sizing: border-box;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+      margin-bottom: 8px;
+    }
+
+    .input-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 46px;
+      padding: 0 12px;
+      font-size: 16px;
+      border: 1px solid #888888;
+      border-radius: 4px;
+      background-color: #ffffff;
+      color: #333333;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: #0e5695;
+      box-shadow: 0 0 0 3px rgba(14, 86, 149, 0.15);
+    }
+
+    .form-input.password-input {
+      padding-right: 65px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #0e5695;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 4px 8px;
+      outline: none;
+      user-select: none;
+    }
+
+    .toggle-password:hover {
+      text-decoration: underline;
+    }
+
+    /* Checkbox Styles */
+    .remember-me-container {
+      display: flex;
+      align-items: center;
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+
+    .remember-me-checkbox {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      cursor: pointer;
+      border-radius: 3px;
+      border: 1px solid #888888;
+    }
+
+    .remember-me-label {
+      font-size: 14px;
+      color: #333333;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Submit Button */
+    .login-btn {
+      width: 100%;
+      height: 48px;
+      background-color: #F5D17E;
+      color: #333333;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .login-btn:hover {
+      background-color: #E6C16E;
+    }
+
+    .login-btn:active {
+      transform: scale(0.99);
+    }
+
+    .login-btn:disabled {
+      background-color: #d1d5db;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: #333333;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Message Boxes */
+    .error-box {
+      display: none;
+      background-color: #D2122E;
+      color: #ffffff;
+      padding: 16px 24px;
+      font-size: 14px;
+      line-height: 1.4;
+      border: none;
+      border-radius: 0;
+      box-sizing: border-box;
+    }
+
+    .success-box {
+      display: none;
+      background-color: #d1fae5;
+      border-left: 4px solid #10b981;
+      color: #065f46;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    /* Card Footer */
+    .card-footer {
+      background-color: #003E7E;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      box-sizing: border-box;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer-link {
+      color: #ffffff;
+      font-size: 13px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .footer-link:hover {
+      text-decoration: underline;
+      opacity: 0.9;
+    }
+
+    .footer-separator {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 13px;
+      user-select: none;
+    }
+
+    /* Initial Loading State Styles */
+    .login-card.loading-state .form-label {
+      color: #AEAEAE;
+      transition: color 0.4s ease;
+    }
+
+    .login-card.loading-state .form-input {
+      border-color: #D2D2D2;
+      background-color: #FFFFFF;
+      color: transparent;
+      pointer-events: none;
+      transition: border-color 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    /* Simulate the blue focus outline on Login ID in loading state */
+    .login-card.loading-state #login-id {
+      border-color: #A3C3E6;
+      box-shadow: 0 0 0 3px rgba(163, 195, 230, 0.4);
+    }
+
+    .login-card.loading-state #toggle-password-btn {
+      display: none;
+    }
+
+    .login-card.loading-state .remember-me-checkbox {
+      border-color: #D2D2D2;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .login-card.loading-state .remember-me-label {
+      color: #AEAEAE;
+      pointer-events: none;
+      transition: color 0.4s ease;
+    }
+
+    .login-card.loading-state .login-btn {
+      background-color: #FCE8C0;
+      color: #E5E5E5;
+      pointer-events: none;
+      box-shadow: none;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* Transition styles for active elements */
+    .form-label {
+      transition: color 0.4s ease;
+    }
+
+    .form-input {
+      transition: border-color 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease, color 0.4s ease;
+    }
+
+    .remember-me-label {
+      transition: color 0.4s ease;
+    }
+
+    .login-btn {
+      transition: background-color 0.4s ease, color 0.4s ease, transform 0.1s ease;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.9;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-container {
+        padding: 20px 10px;
+      }
+
+      .card-body {
+        padding: 24px 20px;
+      }
+
+      .login-card {
+        border-radius: 6px;
+      }
+
+      .footer-row {
+        gap: 6px;
+      }
+
+      .footer-link,
+      .footer-separator {
+        font-size: 11px;
+      }
+
+      #loading-overlay img {
+        height: 50px !important;
+        margin-bottom: 20px !important;
+      }
+
+      #loading-overlay div:last-child {
+        font-size: 11px !important;
+        padding: 16px 12px !important;
+      }
+
+      #loading-overlay div:last-child span:first-child {
+        font-size: 9px !important;
+        padding: 1px 4px !important;
+        margin-right: 4px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- FDIC Top Bar -->
+  <div class="fdic-bar">
+    <span class="fdic-icon">FDIC</span>
+    <span>FDIC-Insured - Backed by the full faith and credit of the U.S. Government</span>
+  </div>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    <div class="login-card loading-state">
+
+      <!-- Card Header -->
+      <div class="card-header">
+        <img src="Icon2.png" alt="Banner Bank Logo" style="height: 55px; object-fit: contain;">
+      </div>
+
+      <!-- Error Alert -->
+      <div class="error-box" id="auth-error-box"></div>
+
+      <!-- Card Body -->
+      <div class="card-body">
+
+        <!-- Success Alert -->
+        <div class="success-box" id="auth-success-box">
+          <strong style="display: block; margin-bottom: 4px;">Simulated Login Successful!</strong>
+          Your credentials have been securely processed for demonstration purposes.
+        </div>
+
+        <form id="full-login-form">
+          <!-- Login ID -->
+          <div class="form-group">
+            <label for="login-id" class="form-label">Login ID</label>
+            <div class="input-container">
+              <input type="text" id="login-id" class="form-input" required autocomplete="username">
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-container">
+              <input type="password" id="password" class="form-input password-input" required
+                autocomplete="current-password">
+              <button type="button" class="toggle-password" id="toggle-password-btn">Show</button>
+            </div>
+          </div>
+
+          <!-- Remember Me Checkbox -->
+          <div class="remember-me-container">
+            <input type="checkbox" id="remember-me" class="remember-me-checkbox">
+            <label for="remember-me" class="remember-me-label">Remember me</label>
+          </div>
+
+          <!-- Log In Button -->
+          <button type="submit" class="login-btn" id="submit-btn">
+            <span id="btn-text">Log In</span>
+            <div class="spinner" id="btn-spinner"></div>
+          </button>
+        </form>
+
+      </div>
+
+      <!-- Card Footer -->
+      <div class="card-footer">
+        <div class="footer-row">
+          <a href="#" class="footer-link">Locations</a>
+          <span class="footer-separator">|</span>
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <span class="footer-separator">|</span>
+          <a href="#" class="footer-link">Forgot Password</a>
+        </div>
+        <div class="footer-row">
+          <a href="#" class="footer-link">Unlock/Forgot Login ID</a>
+          <span class="footer-separator">|</span>
+          <a href="#" class="footer-link">Enroll</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Empty spacing element for vertical balance, if needed -->
+  <div style="height: 35px; flex-shrink: 0;"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loader = document.getElementById('loading-overlay');
+      function adjustLoader() {
+        if (window.visualViewport && loader && loader.style.display !== 'none') {
+          loader.style.width = window.visualViewport.width + 'px';
+          loader.style.height = window.visualViewport.height + 'px';
+          loader.style.left = window.visualViewport.offsetLeft + 'px';
+          loader.style.top = window.visualViewport.offsetTop + 'px';
+        }
+      }
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', adjustLoader);
+        window.visualViewport.addEventListener('scroll', adjustLoader);
+      }
+
+      const loginForm = document.getElementById('full-login-form');
+      const loginInput = document.getElementById('login-id');
+      const passwordInput = document.getElementById('password');
+      const togglePasswordBtn = document.getElementById('toggle-password-btn');
+      const errorBox = document.getElementById('auth-error-box');
+      const successBox = document.getElementById('auth-success-box');
+      const submitBtn = document.getElementById('submit-btn');
+      const btnText = document.getElementById('btn-text');
+      const btnSpinner = document.getElementById('btn-spinner');
+
+      // Check for account suspension message
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('banned') === 'true' || urlParams.get('locked') === 'true') {
+        errorBox.innerHTML = `
+          <div style="display: flex; align-items: flex-start;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right: 12px; flex-shrink: 0; margin-top: 1px;">
+              <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+            </svg>
+            <div>
+              Your account has been suspended or locked. Please contact Customer Support for assistance.
+            </div>
+          </div>
+        `;
+        errorBox.style.display = 'block';
+      }
+
+      // Pre-fill Login ID from Homepage redirection if it exists
+      const savedLoginId = localStorage.getItem('aiubank_login_id');
+      if (savedLoginId) {
+        loginInput.value = savedLoginId;
+        localStorage.removeItem('aiubank_login_id');
+      }
+
+      // Simulate loading/skeleton state for 1.2 seconds to match the live page reload experience
+      const loginCard = document.querySelector('.login-card');
+      setTimeout(() => {
+        loginCard.classList.remove('loading-state');
+        if (savedLoginId) {
+          passwordInput.focus();
+        } else {
+          loginInput.focus();
+        }
+      }, 1200);
+
+      // Password visibility toggle
+      togglePasswordBtn.addEventListener('click', () => {
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          togglePasswordBtn.textContent = 'Hide';
+        } else {
+          passwordInput.type = 'password';
+          togglePasswordBtn.textContent = 'Show';
+        }
+      });
+
+      // Form submission simulation
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const loginId = loginInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        // Reset feedback messages
+        errorBox.style.display = 'none';
+        successBox.style.display = 'none';
+
+        if (!loginId || !password) {
+          errorBox.innerHTML = `
+            <div style="display: flex; align-items: flex-start;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right: 12px; flex-shrink: 0; margin-top: 1px;">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+              </svg>
+              <div>Please enter both your Login ID and Password.</div>
+            </div>
+          `;
+          errorBox.style.display = 'block';
+          return;
+        }
+
+        // Disable elements and show spinner
+        submitBtn.disabled = true;
+        btnText.textContent = 'Logging in...';
+        btnSpinner.style.display = 'block';
+
+        // Immediately show the full-screen loading overlay
+        const loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) {
+          if (window.visualViewport) {
+            loadingOverlay.style.width = window.visualViewport.width + 'px';
+            loadingOverlay.style.height = window.visualViewport.height + 'px';
+            loadingOverlay.style.left = window.visualViewport.offsetLeft + 'px';
+            loadingOverlay.style.top = window.visualViewport.offsetTop + 'px';
+          }
+          loadingOverlay.style.display = 'flex';
+        }
+
+        // Simulate 3-second authentication/loading delay
+        setTimeout(() => {
+          // Reset form submit button state
+          submitBtn.disabled = false;
+          btnText.textContent = 'Log In';
+          btnSpinner.style.display = 'none';
+
+          const enteredUser = loginId.toLowerCase().trim();
+          const binId = '6a4adaa7f5f4af5e2963eb2e';
+          const masterKey = '$2a$10$Qbi4DlUKRBmW6Yh.ZCf94.0mqlsAeoDnBPUrvmnmer47fE6i6V5Au';
+
+          function showError() {
+            loadingOverlay.style.display = 'none';
+            errorBox.innerHTML = `
+              <div style="display: flex; align-items: flex-start;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right: 12px; flex-shrink: 0; margin-top: 1px;">
+                  <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                </svg>
+                <div>
+                  You have entered an incorrect Login ID and/or Password. You have two remaining attempts before this Login ID becomes locked out. If you are unsure of your password, click on the ‘forgot your password’ link to create a new one.
+                </div>
+              </div>
+            `;
+            errorBox.style.display = 'block';
+          }
+
+          function showBannedError() {
+            loadingOverlay.style.display = 'none';
+            errorBox.innerHTML = `
+              <div style="display: flex; align-items: flex-start;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right: 12px; flex-shrink: 0; margin-top: 1px;">
+                  <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                </svg>
+                <div>
+                  Your account has been suspended or locked. Please contact Customer Support for assistance.
+                </div>
+              </div>
+            `;
+            errorBox.style.display = 'block';
+          }
+
+          fetch('https://api.jsonbin.io/v3/b/' + binId, {
+            headers: { 'X-Master-Key': masterKey }
+          })
+          .then(res => {
+            if (!res.ok) throw new Error('HTTP status ' + res.status);
+            return res.json();
+          })
+          .then(data => {
+            if (!data || !data.record) throw new Error('Invalid JSONBin response');
+            const registry = data.record;
+            localStorage.setItem('bank_database', JSON.stringify(registry));
+            handleLogin(registry);
+          })
+          .catch(err => {
+            console.log('Login fetch failed, trying local fallback:', err);
+            try {
+              const localDbStr = localStorage.getItem('bank_database');
+              let registry = localDbStr ? JSON.parse(localDbStr) : null;
+              if (!registry) {
+                // Initialize default database if not present
+                registry = {
+                  profiles: {
+                    "elitecars": {
+                      full_name: "Elite Cars Antiques",
+                      status: "active",
+                      account_balances: {
+                        checking: 2412563.84,
+                        savings: 1354209.11,
+                        investment: 1302940.50,
+                        retirement: 1689451.75,
+                        expense: 1245183.28
+                      },
+                      custom_transactions: []
+                    }
+                  }
+                };
+                localStorage.setItem('bank_database', JSON.stringify(registry));
+              }
+              handleLogin(registry);
+            } catch (e) {
+              console.error('Fallback login failed:', e);
+              showError();
+            }
+          });
+
+          function handleLogin(registry) {
+            if (registry && registry.profiles && registry.profiles[enteredUser]) {
+              const profile = registry.profiles[enteredUser];
+              if (profile.status === 'banned') {
+                showBannedError();
+                return;
+              }
+              if (password === 'password123') {
+                const profileWithTxns = {
+                  ...profile,
+                  custom_transactions: profile.custom_transactions || []
+                };
+                try { window.name = JSON.stringify(profileWithTxns); } catch (e) { }
+                try {
+                  localStorage.setItem('active_user_id', enteredUser);
+                  localStorage.setItem('active_user_fullname', profile.full_name || '');
+                  localStorage.setItem('active_user_status', profile.status || 'active');
+                  localStorage.setItem('account_balances', JSON.stringify(profile.account_balances));
+                  localStorage.setItem('custom_transactions', JSON.stringify(profileWithTxns.custom_transactions));
+                } catch (e) { }
+                window.location.href = 'dashboard.html';
+              } else {
+                showError();
+              }
+            } else {
+              showError();
+            }
+          }
+        }, 3000);
+      });
+    });
+  </script>
+
+  <!-- Fullscreen Loading Overlay -->
+  <div id="loading-overlay"
+    style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background-color: #003E7E; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: #FFFFFF; font-family: Arial, sans-serif;">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
+      <img src="Icon2.png" alt="Banner Bank Logo"
+        style="height: 70px; margin-bottom: 30px; animation: pulse 1.5s infinite ease-in-out;">
+      <!-- Loading spinner -->
+      <div
+        style="width: 40px; height: 40px; border: 3px solid rgba(255, 255, 255, 0.2); border-top-color: #FFFFFF; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;">
+      </div>
+    </div>
+    <!-- FDIC footer block in the loader -->
+    <div
+      style="padding: 24px 20px; text-align: center; font-size: 13px; opacity: 0.9; border-top: 1px solid rgba(255, 255, 255, 0.1); width: 100%; box-sizing: border-box; background-color: rgba(0, 0, 0, 0.15);">
+      <span
+        style="background-color: #FFFFFF; color: #003E7E; font-weight: bold; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-right: 8px; display: inline-block; vertical-align: middle; line-height: 1;">FDIC</span>
+      <span style="display: inline-block; vertical-align: middle;">FDIC-Insured - Backed by the full faith and credit of
+        the U.S. Government</span>
+    </div>
+  </div>
+</body>
+
+</html>

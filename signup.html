@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Enroll in Online Banking - AI University Bank</title>
+  <meta name="description" content="Set up your AIU Bank online banking access in three easy steps.">
+  <link rel="icon" href="Icon.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Wizard styling extensions */
+    .step-content {
+      display: none;
+    }
+
+    .step-content.active {
+      display: block;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .error-text {
+      color: var(--color-error);
+      font-size: 0.78rem;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .input-error {
+      border-color: var(--color-error) !important;
+      background-color: rgba(239, 68, 68, 0.05) !important;
+    }
+
+    /* Grid layout for form rows */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* Responsive styling */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 10px 16px !important;
+      }
+      .nav-links {
+        display: none !important;
+      }
+      .auth-page {
+        padding-top: 100px !important;
+        padding-bottom: 40px !important;
+      }
+      .signup-card {
+        padding: 24px 16px !important;
+        margin: 0 12px !important;
+      }
+      .wizard-steps {
+        gap: 8px !important;
+        margin-bottom: 30px !important;
+      }
+      .step-label {
+        font-size: 11px !important;
+      }
+      .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="logo-container">
+      <a href="index.html" style="display: flex; align-items: center; gap: 12px;">
+        <img src="Icon.png" alt="Banner Bank Logo" style="height: 45px; width: auto; object-fit: contain;">
+        <span>BANNER BANK</span>
+      </a>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#">Security</a></li>
+      <li><a href="#">Enrollment Help</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-secondary">Sign In</a>
+    </div>
+  </nav>
+
+  <!-- Wizard Layout -->
+  <main class="auth-page" style="padding-top: 140px; padding-bottom: 80px;">
+    <div class="signup-card">
+      <div class="auth-header" style="margin-bottom: 40px;">
+        <h1 style="font-size: 2rem;">Enroll in Online Banking</h1>
+        <p class="text-muted" style="margin-top: 4px; font-size: 0.95rem;">Set up secure access to your AIU University
+          accounts.</p>
+      </div>
+
+      <!-- Progressive steps bar -->
+      <div class="wizard-steps">
+        <div class="step-indicator active" id="indicator-1">
+          <div class="step-number">1</div>
+          <div class="step-label">Identity</div>
+        </div>
+        <div class="step-indicator" id="indicator-2">
+          <div class="step-number">2</div>
+          <div class="step-label">Contact</div>
+        </div>
+        <div class="step-indicator" id="indicator-3">
+          <div class="step-number">3</div>
+          <div class="step-label">Credentials</div>
+        </div>
+      </div>
+
+      <!-- Enrollment Form -->
+      <form id="enrollment-wizard-form" novalidate>
+
+        <!-- STEP 1: VERIFY IDENTITY -->
+        <div class="step-content active" id="step-panel-1">
+          <h3
+            style="margin-bottom: 24px; font-size: 1.25rem; border-bottom: 1px solid var(--color-border); padding-bottom: 12px;">
+            Step 1: Identity Verification</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first-name">First Name</label>
+              <input type="text" id="first-name" class="form-control" placeholder="Jane" style="padding-left: 16px;"
+                required>
+              <div class="error-text" id="err-first-name">First name is required.</div>
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name</label>
+              <input type="text" id="last-name" class="form-control" placeholder="Doe" style="padding-left: 16px;"
+                required>
+              <div class="error-text" id="err-last-name">Last name is required.</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dob">Date of Birth</label>
+              <input type="date" id="dob" class="form-control" style="padding-left: 16px;" required>
+              <div class="error-text" id="err-dob">Valid date of birth is required.</div>
+            </div>
+            <div class="form-group">
+              <label for="ssn-last4">SSN (Last 4 Digits)</label>
+              <input type="text" id="ssn-last4" class="form-control" placeholder="1234" maxlength="4"
+                style="padding-left: 16px;" required>
+              <div class="error-text" id="err-ssn-last4">Provide the last 4 digits of your SSN.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: CONTACT INFORMATION -->
+        <div class="step-content" id="step-panel-2">
+          <h3
+            style="margin-bottom: 24px; font-size: 1.25rem; border-bottom: 1px solid var(--color-border); padding-bottom: 12px;">
+            Step 2: Contact Details</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" class="form-control" placeholder="jane.doe@university.edu"
+                style="padding-left: 16px;" required>
+              <div class="error-text" id="err-email">Valid email is required.</div>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" class="form-control" placeholder="555-0199" style="padding-left: 16px;"
+                required>
+              <div class="error-text" id="err-phone">Valid phone number is required.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Street Address</label>
+            <input type="text" id="address" class="form-control" placeholder="123 Scholar Way"
+              style="padding-left: 16px;" required>
+            <div class="error-text" id="err-address">Street address is required.</div>
+          </div>
+
+          <div class="form-row" style="grid-template-columns: 2fr 1fr 1.2fr;">
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" class="form-control" placeholder="Campus Town" style="padding-left: 16px;"
+                required>
+              <div class="error-text" id="err-city">City is required.</div>
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" id="state" class="form-control" placeholder="WA" maxlength="2"
+                style="padding-left: 16px;" required>
+              <div class="error-text" id="err-state">State is required.</div>
+            </div>
+            <div class="form-group">
+              <label for="zip">ZIP Code</label>
+              <input type="text" id="zip" class="form-control" placeholder="98101" maxlength="10"
+                style="padding-left: 16px;" required>
+              <div class="error-text" id="err-zip">ZIP is required.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: LOGIN SETUP -->
+        <div class="step-content" id="step-panel-3">
+          <h3
+            style="margin-bottom: 24px; font-size: 1.25rem; border-bottom: 1px solid var(--color-border); padding-bottom: 12px;">
+            Step 3: Security & Credentials</h3>
+
+          <div class="form-group">
+            <label for="login-id">Choose Login ID</label>
+            <input type="text" id="login-id" class="form-control" placeholder="Choose a username"
+              style="padding-left: 16px;" required autocomplete="username">
+            <p class="text-muted" style="font-size: 0.78rem; margin-top: 6px;">Must be 5-20 characters long. Letters and
+              numbers only.</p>
+            <div class="error-text" id="err-login-id">Provide a valid Login ID (minimum 5 chars).</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Create Password</label>
+              <input type="password" id="password" class="form-control" placeholder="Create strong password"
+                style="padding-left: 16px;" required autocomplete="new-password">
+              <div class="error-text" id="err-password">Password must be at least 8 characters.</div>
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Confirm Password</label>
+              <input type="password" id="confirm-password" class="form-control" placeholder="Verify password"
+                style="padding-left: 16px;" required autocomplete="new-password">
+              <div class="error-text" id="err-confirm-password">Passwords must match.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUCCESS PANEL (WIZARD FINISHED) -->
+        <div class="step-content" id="step-panel-success">
+          <div class="success-panel">
+            <div class="success-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
+              </svg>
+            </div>
+            <h2>Enrollment Request Submitted!</h2>
+            <p>Thank you for enrolling. Since this is an educational mock-up matching your schema columns:</p>
+
+            <div
+              style="background-color: rgba(255,255,255,0.03); border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); padding: 20px; text-align: left; margin-bottom: 32px; font-size: 0.9rem;">
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                <li>&bull; <strong>kyc_status:</strong> <code>pending</code></li>
+                <li>&bull; <strong>account_status:</strong> <code>pending</code></li>
+                <li>&bull; Your mock account setup is logged. You can now use your simulated credentials.</li>
+              </ul>
+            </div>
+
+            <a href="login.html" class="btn btn-primary" style="padding: 12px 32px;">Go to Login Portal</a>
+          </div>
+        </div>
+
+        <!-- Wizard Navigation Actions -->
+        <div class="wizard-actions" id="wizard-buttons-container">
+          <button type="button" class="btn btn-secondary" id="btn-back" disabled>Back</button>
+          <button type="button" class="btn btn-primary" id="btn-next">Next</button>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" style="padding: 40px 4% 30px 4%;">
+    <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+      <p>&copy; 2026 AI University Bank. Educational Mockup. All rights reserved.</p>
+      <div class="footer-meta">
+        <a href="#">Privacy Disclosure</a>
+        <a href="#">Security Statement</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Wizard State variables
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    // Elements
+    const btnBack = document.getElementById('btn-back');
+    const btnNext = document.getElementById('btn-next');
+    const buttonsContainer = document.getElementById('wizard-buttons-container');
+
+    // Panels & Indicators
+    const panels = {
+      1: document.getElementById('step-panel-1'),
+      2: document.getElementById('step-panel-2'),
+      3: document.getElementById('step-panel-3'),
+      'success': document.getElementById('step-panel-success')
+    };
+
+    const indicators = {
+      1: document.getElementById('indicator-1'),
+      2: document.getElementById('indicator-2'),
+      3: document.getElementById('indicator-3')
+    };
+
+    // Validation definitions
+    function validateStep(step) {
+      let isValid = true;
+
+      // Clean all inputs styling
+      document.querySelectorAll('.form-control').forEach(el => {
+        el.classList.remove('input-error');
+      });
+      document.querySelectorAll('.error-text').forEach(el => {
+        el.style.display = 'none';
+      });
+
+      if (step === 1) {
+        const firstName = document.getElementById('first-name');
+        const lastName = document.getElementById('last-name');
+        const dob = document.getElementById('dob');
+        const ssn = document.getElementById('ssn-last4');
+
+        if (!firstName.value.trim()) {
+          showError('first-name');
+          isValid = false;
+        }
+        if (!lastName.value.trim()) {
+          showError('last-name');
+          isValid = false;
+        }
+        if (!dob.value) {
+          showError('dob');
+          isValid = false;
+        }
+        if (!ssn.value.trim() || ssn.value.trim().length < 4 || isNaN(ssn.value.trim())) {
+          showError('ssn-last4');
+          isValid = false;
+        }
+      }
+      else if (step === 2) {
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+        const address = document.getElementById('address');
+        const city = document.getElementById('city');
+        const state = document.getElementById('state');
+        const zip = document.getElementById('zip');
+
+        // simple email regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!email.value.trim() || !emailRegex.test(email.value.trim())) {
+          showError('email');
+          isValid = false;
+        }
+        if (!phone.value.trim()) {
+          showError('phone');
+          isValid = false;
+        }
+        if (!address.value.trim()) {
+          showError('address');
+          isValid = false;
+        }
+        if (!city.value.trim()) {
+          showError('city');
+          isValid = false;
+        }
+        if (!state.value.trim() || state.value.trim().length < 2) {
+          showError('state');
+          isValid = false;
+        }
+        if (!zip.value.trim()) {
+          showError('zip');
+          isValid = false;
+        }
+      }
+      else if (step === 3) {
+        const loginId = document.getElementById('login-id');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm-password');
+
+        if (!loginId.value.trim() || loginId.value.trim().length < 5) {
+          showError('login-id');
+          isValid = false;
+        }
+        if (!password.value.trim() || password.value.trim().length < 8) {
+          showError('password');
+          isValid = false;
+        }
+        if (password.value.trim() !== confirmPassword.value.trim()) {
+          showError('confirm-password');
+          isValid = false;
+        }
+      }
+
+      return isValid;
+    }
+
+    function showError(fieldId) {
+      const inputEl = document.getElementById(fieldId);
+      inputEl.classList.add('input-error');
+
+      const errEl = document.getElementById(`err-${fieldId}`);
+      if (errEl) {
+        errEl.style.display = 'block';
+      }
+    }
+
+    // Step Transition Functions
+    function goToStep(step) {
+      // Hide active panel, deactivate active indicator
+      Object.keys(panels).forEach(key => {
+        panels[key].classList.remove('active');
+      });
+
+      panels[step].classList.add('active');
+
+      // Update indicators
+      if (step !== 'success') {
+        for (let i = 1; i <= totalSteps; i++) {
+          indicators[i].classList.remove('active', 'completed');
+          if (i < step) {
+            indicators[i].classList.add('completed');
+          } else if (i === step) {
+            indicators[i].classList.add('active');
+          }
+        }
+
+        // Navigation Button Updates
+        btnBack.disabled = (step === 1);
+        if (step === totalSteps) {
+          btnNext.textContent = 'Submit Enrollment';
+        } else {
+          btnNext.textContent = 'Next';
+        }
+      } else {
+        // Success state
+        for (let i = 1; i <= totalSteps; i++) {
+          indicators[i].classList.remove('active');
+          indicators[i].classList.add('completed');
+        }
+        buttonsContainer.style.display = 'none';
+      }
+    }
+
+    // Event Listeners
+    btnNext.addEventListener('click', () => {
+      if (validateStep(currentStep)) {
+        if (currentStep < totalSteps) {
+          currentStep++;
+          goToStep(currentStep);
+        } else {
+          // Final Submit
+          goToStep('success');
+        }
+      }
+    });
+
+    btnBack.addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        goToStep(currentStep);
+      }
+    });
+  </script>
+</body>
+
+</html>

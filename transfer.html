@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transfer Funds - Banner Bank Online Banking</title>
+  <link rel="icon" href="Icon.png" type="image/png">
+  <style>
+    /* Design Tokens & Resets */
+    :root {
+      --primary-blue: #003E7E;
+      --secondary-blue: #005B99;
+      --light-blue: #0D5B99;
+      --sidebar-bg: #EAEAEA;
+      --content-bg: #F4F5F7;
+      --white: #FFFFFF;
+      --text-dark: #333333;
+      --text-muted: #666666;
+      --text-light: #888888;
+      --border-color: #D1D5DB;
+      --card-border: #E5E7EB;
+
+      /* Account colors */
+      --checking-gold: #F5B324;
+      --savings-gold: #F39C12;
+      --investment-red: #E31B23;
+      --retirement-green: #8C9A21;
+      --expense-black: #1A1A1A;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--content-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: auto;
+    }
+
+    /* Header */
+    .header {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      height: 70px;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-right {
+      text-align: right;
+    }
+
+    .welcome-text {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .last-login {
+      font-size: 11px;
+      color: #A5CBEB;
+      font-style: italic;
+    }
+
+    /* Mobile hamburger toggle */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--white);
+      cursor: pointer;
+      padding: 8px;
+      margin-right: 12px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-menu-toggle:focus {
+      outline: none;
+    }
+
+    /* Main Container layout */
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 70px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--sidebar-bg);
+      flex-shrink: 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--border-color);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 16px 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 4px;
+    }
+
+    .menu-item-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      color: #4B5563;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .menu-item-link:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--primary-blue);
+    }
+
+    .menu-item-link.active {
+      background-color: var(--white);
+      color: var(--primary-blue);
+      border-left: 4px solid var(--primary-blue);
+      font-weight: bold;
+    }
+
+    .menu-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-chevron {
+      display: flex;
+      align-items: center;
+      color: #9CA3AF;
+      transition: transform 0.2s;
+    }
+
+    .badge {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      background-color: var(--content-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+    }
+
+    /* Transfer Card Container */
+    .transfer-card {
+      background-color: var(--white);
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .card-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Form Fields */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-select,
+    .form-input {
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: var(--white);
+      color: var(--text-dark);
+      outline: none;
+      width: 100%;
+    }
+
+    .form-select:focus,
+    .form-input:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(0, 62, 126, 0.15);
+    }
+
+    /* Input with prefix */
+    .input-prefix-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-prefix {
+      position: absolute;
+      left: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--text-muted);
+    }
+
+    .input-prefix-wrapper .form-input {
+      padding-left: 28px;
+    }
+
+    /* Alert and Information Panel */
+    .info-panel {
+      background-color: #F0F7FF;
+      border-left: 4px solid var(--primary-blue);
+      padding: 12px 16px;
+      border-radius: 0 4px 4px 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--secondary-blue);
+    }
+
+    /* Buttons styling */
+    .card-footer {
+      background-color: #F8FAFC;
+      padding: 18px 24px;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn-cancel {
+      background-color: #E2E8F0;
+      color: var(--text-dark);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-cancel:hover {
+      background-color: #CBD5E1;
+    }
+
+    .btn-submit {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--secondary-blue);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Success / Receipt Screen styling */
+    .receipt-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+      padding: 30px 24px;
+    }
+
+    .success-icon-wrapper {
+      width: 60px;
+      height: 60px;
+      background-color: #DEF7EC;
+      color: #03543F;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .receipt-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #03543F;
+    }
+
+    .receipt-grid {
+      background-color: #F8FAFC;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1.2fr 1.8fr;
+      row-gap: 12px;
+      column-gap: 10px;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .receipt-label {
+      color: var(--text-muted);
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .receipt-val {
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    /* Spinner */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(0, 62, 126, 0.1);
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+      .sidebar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 999;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-toggle {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .main-content {
+        padding: 16px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      #loading-overlay img {
+        height: 50px !important;
+        margin-bottom: 20px !important;
+      }
+      #loading-overlay div:last-child {
+        font-size: 11px !important;
+        padding: 16px 12px !important;
+      }
+      #loading-overlay div:last-child span:first-child {
+        font-size: 9px !important;
+        padding: 1px 4px !important;
+        margin-right: 4px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header Banner -->
+  <header class="header">
+    <div class="header-left" style="display: flex; align-items: center;">
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+      </button>
+      <img src="Icon2.png" alt="Banner Bank Logo" style="width: 180px; height: auto; object-fit: contain;">
+    </div>
+    <div class="header-right">
+      <div class="welcome-text">Welcome back, Elite Cars Antiques</div>
+      <div class="last-login">Last login: 05/07/2026 at 09:12 AM</div>
+    </div>
+  </header>
+
+  <div class="app-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar-nav">
+      <nav>
+        <ul class="sidebar-menu">
+          <li>
+            <a href="dashboard.html" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                  </svg>
+                </span>
+                <span>Home</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="messages.html" class="menu-item-link" id="messages-menu-btn">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                  </svg>
+                </span>
+                <span>Messages</span>
+              </div>
+              <span class="badge" id="messages-badge" style="display: none;">0</span>
+            </a>
+          </li>
+          <li>
+            <a href="transactions.html" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z" />
+                  </svg>
+                </span>
+                <span>Transactions</span>
+              </div>
+              <span class="menu-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" />
+                  </svg>
+                </span>
+                <span>Bill Pay</span>
+              </div>
+              <span class="menu-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+
+          <li>
+            <a href="index.html" class="menu-item-link" id="menu-logout-btn">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                  </svg>
+                </span>
+                <span style="color: #DC2626; font-weight: bold;">Log Out</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Transfer Card -->
+      <div class="transfer-card" id="main-transfer-panel">
+        <div class="card-header">
+          <div class="card-title">TRANSFER & PAYMENTS MODULE</div>
+        </div>
+
+        <form id="transfer-form">
+          <div class="card-body">
+            
+            <div class="info-panel">
+              <strong>Transfer Security Notice:</strong> Make sure recipient details are correct. Wire transfers and external ACH transfers are subject to standard daily limits, transaction processing delays, and compliance verification.
+            </div>
+
+            <!-- Transfer Type -->
+            <div class="form-group">
+              <label class="form-label" for="transfer-method">Transfer Method</label>
+              <select id="transfer-method" class="form-select">
+                <option value="internal">Internal (Between My Banner Bank Accounts)</option>
+                <option value="ach">External Bank Account (Standard ACH - 2 to 3 days)</option>
+                <option value="wire">Domestic Wire Transfer (Same day - Processing fee $15.00)</option>
+              </select>
+            </div>
+
+            <!-- Source Account -->
+            <div class="form-group">
+              <label class="form-label" for="source-account">Source Account (Transfer From)</label>
+              <select id="source-account" class="form-select">
+                <option value="checking">Checking (**5671) - Balance: $2,412,563.84</option>
+                <option value="savings">Savings (**5672) - Balance: $1,354,209.11</option>
+                <option value="investment">Investment Account (**5673) - Balance: $1,302,940.50</option>
+                <option value="retirement">Retirement Savings (**5674) - Balance: $1,689,451.75</option>
+                <option value="expense">Expense Account (**5675) - Balance: $1,245,183.28</option>
+              </select>
+            </div>
+
+            <!-- Destination Account (Internal Mode by Default) -->
+            <div class="form-group" id="destination-internal-wrapper">
+              <label class="form-label" for="dest-account-internal">Destination Account (Transfer To)</label>
+              <select id="dest-account-internal" class="form-select">
+                <option value="savings">Savings (**5672) - Balance: $1,354,209.11</option>
+                <option value="checking">Checking (**5671) - Balance: $2,412,563.84</option>
+                <option value="investment">Investment Account (**5673) - Balance: $1,302,940.50</option>
+                <option value="retirement">Retirement Savings (**5674) - Balance: $1,689,451.75</option>
+                <option value="expense">Expense Account (**5675) - Balance: $1,245,183.28</option>
+              </select>
+            </div>
+
+            <!-- External Details (ACH / Wire) -->
+            <div id="destination-external-wrapper" style="display: none; flex-direction: column; gap: 20px;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="ext-recipient-name">Recipient Name</label>
+                  <input type="text" id="ext-recipient-name" class="form-input" placeholder="e.g. John Doe, or Dealer Co.">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ext-routing-number">Routing Transit Number (RTN)</label>
+                  <input type="text" id="ext-routing-number" class="form-input" placeholder="9-digit RTN code">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="ext-account-number">Recipient Account Number</label>
+                  <input type="text" id="ext-account-number" class="form-input" placeholder="Recipient account number">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ext-bank-name">Recipient Bank Name</label>
+                  <input type="text" id="ext-bank-name" class="form-input" placeholder="e.g. JPMorgan Chase, Wells Fargo">
+                </div>
+              </div>
+            </div>
+
+            <!-- Amount & Date -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="transfer-amount">Amount ($ USD)</label>
+                <div class="input-prefix-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="transfer-amount" class="form-input" step="0.01" min="1" placeholder="0.00" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="transfer-date">Schedule Transfer</label>
+                <input type="date" id="transfer-date" class="form-input">
+              </div>
+            </div>
+
+            <!-- Memo / Reference -->
+            <div class="form-group">
+              <label class="form-label" for="transfer-memo">Memo / Reference (Optional)</label>
+              <input type="text" id="transfer-memo" class="form-input" placeholder="e.g. Purchase Invoice, Monthly rent">
+            </div>
+
+          </div>
+
+          <div class="card-footer">
+            <button type="button" class="btn-cancel" onclick="window.location.href='dashboard.html'">Cancel</button>
+            <button type="submit" class="btn-submit" id="btn-submit-transfer">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm0-8h-2V7h2v2zm4 8h-2v-4h2v4zm0-6h-2V7h2v2zm4 6h-2v-2h2v2zm0-4h-2V7h2v2z"/>
+              </svg>
+              <span>Initiate Transfer</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Receipt / Success State (Initially hidden) -->
+        <div class="receipt-container" id="transfer-receipt-panel">
+          <div class="success-icon-wrapper" style="background-color: #E0F2FE; color: #0369A1;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="currentColor">
+              <path d="M19 8l-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z"/>
+            </svg>
+          </div>
+          <div class="receipt-title" style="color: #0369A1;">Transfer Transaction Processing</div>
+          <p style="color: var(--text-muted); font-size: 13px; max-width: 440px;">Your transfer request has been successfully registered and is currently processing. Below is your official transaction receipt for your records.</p>
+          
+          <div class="receipt-grid">
+            <span class="receipt-label">Transaction ID</span>
+            <span class="receipt-val" id="rec-id">TXN-88902819</span>
+
+            <span class="receipt-label">Status</span>
+            <span class="receipt-val" style="color: #0369A1; font-weight: bold;">Processing</span>
+
+            <span class="receipt-label">Date & Time</span>
+            <span class="receipt-val" id="rec-date">05/07/2026 at 09:47 AM</span>
+
+            <span class="receipt-label">Source Account</span>
+            <span class="receipt-val" id="rec-source">Checking (**5671)</span>
+
+            <span class="receipt-label">Destination</span>
+            <span class="receipt-val" id="rec-dest">Savings (**5672)</span>
+
+            <span class="receipt-label">Amount Transferred</span>
+            <span class="receipt-val" id="rec-amount" style="font-weight: bold; font-size: 15px; color: var(--primary-blue);">$50,000.00</span>
+
+            <span class="receipt-label">Memo / Ref</span>
+            <span class="receipt-val" id="rec-memo">-</span>
+          </div>
+
+          <div style="display: flex; gap: 12px; margin-top: 10px;">
+            <button class="btn-cancel" onclick="window.location.reload()">New Transfer</button>
+            <button class="btn-submit" onclick="window.print()">Print Receipt</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Fullscreen Loading Overlay -->
+  <style>
+    body.no-scroll {
+      overflow: hidden !important;
+      height: 100% !important;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background-color: #003E7E; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: #FFFFFF; font-family: Arial, sans-serif;">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
+      <img src="Icon2.png" alt="Banner Bank Logo" style="height: 70px; margin-bottom: 30px; animation: pulse 1.5s infinite ease-in-out;">
+      <!-- Loading spinner -->
+      <div style="width: 40px; height: 40px; border: 3px solid rgba(255, 255, 255, 0.2); border-top-color: #FFFFFF; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+      <div id="loader-text" style="font-size: 14px; font-weight: bold; color: #FFFFFF; opacity: 0.9;">Verifying and Processing Transfer...</div>
+    </div>
+    <!-- FDIC footer block in the loader -->
+    <div style="padding: 24px 20px; text-align: center; font-size: 13px; opacity: 0.9; border-top: 1px solid rgba(255, 255, 255, 0.1); width: 100%; box-sizing: border-box; background-color: rgba(0, 0, 0, 0.15);">
+      <span style="background-color: #FFFFFF; color: #003E7E; font-weight: bold; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-right: 8px; display: inline-block; vertical-align: middle; line-height: 1;">FDIC</span>
+      <span style="display: inline-block; vertical-align: middle;">FDIC-Insured - Backed by the full faith and credit of the U.S. Government</span>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Helper function to trigger FDIC loading screen and then redirect
+      function triggerLoadingAndRedirect(url) {
+        const loader = document.getElementById('loading-overlay');
+        const textEl = document.getElementById('loader-text');
+        if (textEl) {
+          textEl.textContent = 'Verifying and Redirecting...';
+        }
+        if (loader) {
+          if (window.visualViewport) {
+            loader.style.width = window.visualViewport.width + 'px';
+            loader.style.height = window.visualViewport.height + 'px';
+            loader.style.left = window.visualViewport.offsetLeft + 'px';
+            loader.style.top = window.visualViewport.offsetTop + 'px';
+          }
+          loader.style.display = 'flex';
+        }
+        setTimeout(() => {
+          window.location.href = url;
+        }, 2000);
+      }
+
+      // Keep loader aligned during pinch zoom/scroll
+      function adjustLoader() {
+        const loader = document.getElementById('loading-overlay');
+        if (window.visualViewport && loader && loader.style.display !== 'none') {
+          loader.style.width = window.visualViewport.width + 'px';
+          loader.style.height = window.visualViewport.height + 'px';
+          loader.style.left = window.visualViewport.offsetLeft + 'px';
+          loader.style.top = window.visualViewport.offsetTop + 'px';
+        }
+      }
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', adjustLoader);
+        window.visualViewport.addEventListener('scroll', adjustLoader);
+      }
+
+      // Cloud and Local Shared State Sync (jsonbin.io private bin storage)
+      const BIN_ID = '6a4adaa7f5f4af5e2963eb2e';
+      const MASTER_KEY = '$2a$10$Qbi4DlUKRBmW6Yh.ZCf94.0mqlsAeoDnBPUrvmnmer47fE6i6V5Au';
+      const CLOUD_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
+
+      function getSharedState() {
+        let state = null;
+        try {
+          if (window.name) {
+            state = JSON.parse(window.name);
+          }
+        } catch (e) {}
+
+        if (!state || !state.account_balances) {
+          try {
+            const storedBalances = localStorage.getItem('account_balances');
+            const storedTxns = localStorage.getItem('custom_transactions');
+            state = {
+              account_balances: storedBalances ? JSON.parse(storedBalances) : {
+                checking: 2412563.84,
+                savings: 1354209.11,
+                investment: 1302940.50,
+                retirement: 1689451.75,
+                expense: 1245183.28
+              },
+              custom_transactions: (storedTxns && storedTxns !== "undefined") ? JSON.parse(storedTxns) : []
+            };
+          } catch (e) {
+            state = {
+              account_balances: {
+                checking: 2412563.84,
+                savings: 1354209.11,
+                investment: 1302940.50,
+                retirement: 1689451.75,
+                expense: 1245183.28
+              },
+              custom_transactions: []
+            };
+          }
+          try { window.name = JSON.stringify(state); } catch (e) {}
+        }
+        if (state && (!state.custom_transactions || state.custom_transactions === "undefined")) {
+          state.custom_transactions = [];
+        }
+        return state;
+      }
+
+      function saveSharedState(state) {
+        try {
+          window.name = JSON.stringify(state);
+        } catch (e) {}
+        try {
+          localStorage.setItem('account_balances', JSON.stringify(state.account_balances));
+          localStorage.setItem('custom_transactions', JSON.stringify(state.custom_transactions));
+        } catch (e) {}
+
+        const activeUser = localStorage.getItem('active_user_id') || 'elitecars';
+
+        // Update local database copy first
+        try {
+          const localDbStr = localStorage.getItem('bank_database');
+          let localDb = localDbStr ? JSON.parse(localDbStr) : { profiles: {} };
+          if (!localDb.profiles) localDb.profiles = {};
+          const existingProfile = localDb.profiles[activeUser] || {};
+          localDb.profiles[activeUser] = {
+            ...existingProfile,
+            ...state
+          };
+          localStorage.setItem('bank_database', JSON.stringify(localDb));
+        } catch (e) {
+          console.error('Error updating local db copy:', e);
+        }
+
+        // Fetch master registry, update current user's profile, and write back
+        fetch(CLOUD_URL, {
+          headers: { 'X-Master-Key': MASTER_KEY }
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP status ' + res.status);
+          return res.json();
+        })
+        .then(data => {
+          if (!data || !data.record) throw new Error('Invalid JSONBin response');
+          const registry = data.record || { profiles: {} };
+          if (!registry.profiles) registry.profiles = {};
+          
+          const existingProfile = registry.profiles[activeUser] || {};
+          registry.profiles[activeUser] = {
+            ...existingProfile,
+            ...state
+          };
+
+          return fetch(CLOUD_URL, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Master-Key': MASTER_KEY
+            },
+            body: JSON.stringify(registry)
+          });
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP status ' + res.status);
+          return res.json();
+        })
+        .catch(err => console.log('Cloud save error:', err));
+      }
+
+      function syncWithCloud(onUpdateCallback) {
+        const activeUser = localStorage.getItem('active_user_id') || 'elitecars';
+        fetch(CLOUD_URL, {
+          headers: {
+            'X-Master-Key': MASTER_KEY
+          }
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP status ' + res.status);
+          return res.json();
+        })
+        .then(data => {
+          if (!data || !data.record) throw new Error('Invalid JSONBin response');
+          const registry = data.record;
+          // Save a copy of the synced registry
+          localStorage.setItem('bank_database', JSON.stringify(registry));
+
+          if (registry && registry.profiles && registry.profiles[activeUser]) {
+            const cloudState = registry.profiles[activeUser];
+            
+            // Ban check
+            if (cloudState.status === 'banned') {
+              localStorage.setItem('active_user_status', 'banned');
+              window.location.href = 'index.html?banned=true';
+              return;
+            }
+
+            applyCloudState(cloudState);
+          }
+        })
+        .catch(err => {
+          console.log('Cloud sync error, using local fallback:', err);
+          try {
+            const localDbStr = localStorage.getItem('bank_database');
+            if (localDbStr) {
+              const registry = JSON.parse(localDbStr);
+              if (registry && registry.profiles && registry.profiles[activeUser]) {
+                const cloudState = registry.profiles[activeUser];
+                if (cloudState.status === 'banned') {
+                  localStorage.setItem('active_user_status', 'banned');
+                  window.location.href = 'index.html?banned=true';
+                  return;
+                }
+                applyCloudState(cloudState);
+              }
+            }
+          } catch(e) {
+            console.error('Fallback sync failed:', e);
+          }
+        });
+
+        function applyCloudState(cloudState) {
+          let localTxns = [];
+          try {
+            const localStr = localStorage.getItem('custom_transactions');
+            if (localStr) localTxns = JSON.parse(localStr);
+          } catch(e){}
+
+          const cloudTxns = cloudState.custom_transactions || [];
+          const localIds = new Set(localTxns.map(t => t.id));
+          const mergedTxns = [...localTxns];
+          cloudTxns.forEach(t => {
+            if (!localIds.has(t.id)) {
+              mergedTxns.push(t);
+            }
+          });
+
+          mergedTxns.sort((a, b) => {
+            const parseDate = (dStr) => {
+              try {
+                if (dStr.includes('/')) {
+                  const parts = dStr.split(' at ');
+                  const dateParts = parts[0].split('/');
+                  const timeParts = parts[1].split(' ');
+                  const hm = timeParts[0].split(':');
+                  let h = parseInt(hm[0]);
+                  const m = parseInt(hm[1]);
+                  const isPM = timeParts[1] === 'PM';
+                  if (isPM && h < 12) h += 12;
+                  if (!isPM && h === 12) h = 0;
+                  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0], h, m);
+                } else {
+                  return new Date(dStr.replace(' at ', ' '));
+                }
+              } catch(e) {
+                return new Date(0);
+              }
+            };
+            return parseDate(b.date) - parseDate(a.date);
+          });
+
+          const cloudIds = new Set(cloudTxns.map(t => t.id));
+          const pendingTxns = localTxns.filter(t => !cloudIds.has(t.id));
+          
+          let accountBalances = cloudState.account_balances;
+          if (pendingTxns.length > 0) {
+            try {
+              const localBalStr = localStorage.getItem('account_balances');
+              if (localBalStr) accountBalances = JSON.parse(localBalStr);
+            } catch(e){}
+          }
+
+          const mergedState = {
+            ...cloudState,
+            account_balances: accountBalances,
+            custom_transactions: mergedTxns
+          };
+
+          try { window.name = JSON.stringify(mergedState); } catch(e){}
+          try {
+            localStorage.setItem('account_balances', JSON.stringify(accountBalances));
+            localStorage.setItem('custom_transactions', JSON.stringify(mergedTxns));
+            localStorage.setItem('active_user_fullname', cloudState.full_name || '');
+            localStorage.setItem('active_user_status', cloudState.status || 'active');
+          } catch(e){}
+
+          if (onUpdateCallback) onUpdateCallback(mergedState);
+        }
+      }
+
+      if (localStorage.getItem('active_user_status') === 'banned') {
+        window.location.href = 'index.html?banned=true';
+      }
+
+      function updateWelcomeMessage() {
+        const welcomeText = document.querySelector('.welcome-text');
+        if (welcomeText) {
+          const fullName = localStorage.getItem('active_user_fullname') || 'Elite Cars Antiques';
+          welcomeText.textContent = 'Welcome back, ' + fullName;
+        }
+      }
+
+      updateWelcomeMessage();
+
+      function getBalances() {
+        return getSharedState().account_balances;
+      }
+
+      function updateBalances(balances) {
+        const state = getSharedState();
+        state.account_balances = balances;
+        saveSharedState(state);
+      }
+
+      function formatCurrency(val) {
+        return '$' + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      const sourceSelect = document.getElementById('source-account');
+      const destSelectInternal = document.getElementById('dest-account-internal');
+
+      // Populate dropdowns with real balances
+      function populateDropdowns() {
+        const balances = getBalances();
+
+        sourceSelect.innerHTML = `
+          <option value="checking">Checking (**5671) - Balance: ${formatCurrency(balances.checking)}</option>
+          <option value="savings">Savings (**5672) - Balance: ${formatCurrency(balances.savings)}</option>
+          <option value="investment">Investment Account (**5673) - Balance: ${formatCurrency(balances.investment)}</option>
+          <option value="retirement">Retirement Savings (**5674) - Balance: ${formatCurrency(balances.retirement)}</option>
+          <option value="expense">Expense Account (**5675) - Balance: ${formatCurrency(balances.expense)}</option>
+        `;
+
+        destSelectInternal.innerHTML = `
+          <option value="savings">Savings (**5672) - Balance: ${formatCurrency(balances.savings)}</option>
+          <option value="checking">Checking (**5671) - Balance: ${formatCurrency(balances.checking)}</option>
+          <option value="investment">Investment Account (**5673) - Balance: ${formatCurrency(balances.investment)}</option>
+          <option value="retirement">Retirement Savings (**5674) - Balance: ${formatCurrency(balances.retirement)}</option>
+          <option value="expense">Expense Account (**5675) - Balance: ${formatCurrency(balances.expense)}</option>
+        `;
+      }
+
+      // Initial dropdown setup
+      populateDropdowns();
+      updateMessagesBadge();
+      syncWithCloud(() => {
+        updateWelcomeMessage();
+        populateDropdowns();
+        updateMessagesBadge();
+        if (prefillSource && ['checking', 'savings', 'investment', 'retirement', 'expense'].includes(prefillSource)) {
+          sourceSelect.value = prefillSource;
+        }
+      });
+
+      // Poll every 15s so admin changes (balance, transactions) reflect automatically
+      setInterval(() => {
+        syncWithCloud(() => {
+          updateWelcomeMessage();
+          populateDropdowns();
+          updateMessagesBadge();
+          if (prefillSource && ['checking', 'savings', 'investment', 'retirement', 'expense'].includes(prefillSource)) {
+            sourceSelect.value = prefillSource;
+          }
+        });
+      }, 15000);
+
+      // Toggle sidebar nav
+      const mobileToggle = document.getElementById('mobile-menu-toggle');
+      const sidebarNav = document.getElementById('sidebar-nav');
+      if (mobileToggle && sidebarNav) {
+        mobileToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = sidebarNav.classList.toggle('show');
+          if (isOpen) {
+            document.body.classList.add('no-scroll');
+          } else {
+            document.body.classList.remove('no-scroll');
+          }
+        });
+
+        // Close sidebar when clicking outside of it on mobile
+        document.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            if (!sidebarNav.contains(e.target) && e.target !== mobileToggle && !mobileToggle.contains(e.target)) {
+              sidebarNav.classList.remove('show');
+              document.body.classList.remove('no-scroll');
+            }
+          }
+        });
+      }
+
+      // Sidebar menu items click redirect with loader
+      const menuLinks = document.querySelectorAll('.menu-item-link');
+      menuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+          if (href && href !== '#') {
+            triggerLoadingAndRedirect(href);
+          }
+        });
+      });
+
+      // Cancel button redirect with loader
+      const cancelBtn = document.querySelector('.btn-cancel');
+      if (cancelBtn) {
+        cancelBtn.removeAttribute('onclick'); // remove inline onclick
+        cancelBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          triggerLoadingAndRedirect('dashboard.html');
+        });
+      }
+
+      // Prefill source account from URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const prefillSource = urlParams.get('source');
+      if (prefillSource && ['checking', 'savings', 'investment', 'retirement', 'expense'].includes(prefillSource)) {
+        sourceSelect.value = prefillSource;
+      }
+
+      // Handle Transfer Method toggling
+      const methodSelect = document.getElementById('transfer-method');
+      const internalWrapper = document.getElementById('destination-internal-wrapper');
+      const externalWrapper = document.getElementById('destination-external-wrapper');
+
+      methodSelect.addEventListener('change', () => {
+        if (methodSelect.value === 'internal') {
+          internalWrapper.style.display = 'flex';
+          externalWrapper.style.display = 'none';
+        } else {
+          internalWrapper.style.display = 'none';
+          externalWrapper.style.display = 'flex';
+        }
+      });
+
+      // Set today as default date
+      const dateInput = document.getElementById('transfer-date');
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.value = today;
+
+      // Handle Form Submit
+      const transferForm = document.getElementById('transfer-form');
+      const receiptPanel = document.getElementById('transfer-receipt-panel');
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const textEl = document.getElementById('loader-text');
+
+      transferForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const amount = parseFloat(document.getElementById('transfer-amount').value);
+        if (isNaN(amount) || amount <= 0) return;
+
+        // Verify balance sufficiency
+        const balances = getBalances();
+        const sourceAccVal = sourceSelect.value;
+        if (balances[sourceAccVal] < amount) {
+          alert('Insufficient funds in the selected source account.');
+          return;
+        }
+
+        // Set loader text for transaction processing
+        if (textEl) {
+          textEl.textContent = 'Verifying and Processing Transfer...';
+        }
+        
+        // Show spinner
+        if (loadingOverlay) {
+          if (window.visualViewport) {
+            loadingOverlay.style.width = window.visualViewport.width + 'px';
+            loadingOverlay.style.height = window.visualViewport.height + 'px';
+            loadingOverlay.style.left = window.visualViewport.offsetLeft + 'px';
+            loadingOverlay.style.top = window.visualViewport.offsetTop + 'px';
+          }
+          loadingOverlay.style.display = 'flex';
+        }
+
+        setTimeout(() => {
+          // Hide spinner
+          loadingOverlay.style.display = 'none';
+
+          // Gather data for receipt
+          const sourceText = sourceSelect.options[sourceSelect.selectedIndex].text;
+          const method = methodSelect.value;
+          
+          let destText = "";
+          let destAccVal = "";
+          if (method === 'internal') {
+            destAccVal = destSelectInternal.value;
+            destText = destSelectInternal.options[destSelectInternal.selectedIndex].text.split(' - ')[0];
+          } else {
+            const recName = document.getElementById('ext-recipient-name').value || 'External Recipient';
+            const bankName = document.getElementById('ext-bank-name').value || 'External Bank';
+            destText = `${recName} (${bankName})`;
+          }
+
+          const memo = document.getElementById('transfer-memo').value || 'None';
+          const txnId = 'TXN-' + Math.floor(10000000 + Math.random() * 90000000);
+          
+          const now = new Date();
+          const pad = (n) => n < 10 ? '0' + n : n;
+          const dateStr = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()} at ${pad(now.getHours())}:${pad(now.getMinutes())} ${now.getHours() >= 12 ? 'PM' : 'AM'}`;
+
+          // Update balances state
+          balances[sourceAccVal] -= amount;
+          if (method === 'internal') {
+            balances[destAccVal] += amount;
+          }
+
+          // Gather state and update balances & custom transactions
+          const state = getSharedState();
+          state.account_balances = balances;
+          
+          // Source debit entry
+          const debitTxn = {
+            date: dateStr,
+            id: txnId,
+            account: sourceAccVal,
+            desc: (method === 'internal') ? `Transfer to ${destText}` : `${method.toUpperCase()} Outward Transfer to ${destText}`,
+            type: 'debit',
+            status: 'Processing',
+            amount: `-$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+          };
+          state.custom_transactions.unshift(debitTxn);
+
+          // If internal, add a credit entry for destination account
+          if (method === 'internal') {
+            const cleanSourceName = sourceText.split('**')[0].trim();
+            const creditTxn = {
+              date: dateStr,
+              id: 'TXN-' + Math.floor(10000000 + Math.random() * 90000000),
+              account: destAccVal,
+              desc: `Transfer Inward from ${cleanSourceName}`,
+              type: 'credit',
+              status: 'Processing',
+              amount: `+$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            };
+            state.custom_transactions.unshift(creditTxn);
+          }
+
+          saveSharedState(state);
+          populateDropdowns();
+
+          // Fill receipt values
+          document.getElementById('rec-id').textContent = txnId;
+          document.getElementById('rec-date').textContent = dateStr;
+          document.getElementById('rec-source').textContent = sourceText.split(' - ')[0];
+          document.getElementById('rec-dest').textContent = destText;
+          document.getElementById('rec-amount').textContent = '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          document.getElementById('rec-memo').textContent = memo;
+
+          // Swap panels
+          transferForm.style.display = 'none';
+          receiptPanel.style.display = 'flex';
+
+        }, 5000); // 5 second processing delay
+      });
+
+      function updateMessagesBadge() {
+        const state = getSharedState();
+        const txns = state.custom_transactions || [];
+        
+        let readIds = [];
+        try {
+          const readStr = localStorage.getItem('read_message_ids');
+          if (readStr) readIds = JSON.parse(readStr);
+        } catch(e){}
+
+        let clearedIds = [];
+        try {
+          const clearedStr = localStorage.getItem('cleared_message_ids');
+          if (clearedStr) clearedIds = JSON.parse(clearedStr);
+        } catch(e){}
+
+        const visibleTxns = txns.filter(t => !clearedIds.includes(t.id));
+        const unreadCount = visibleTxns.filter(t => !readIds.includes(t.id)).length;
+        
+        const messagesBadge = document.getElementById('messages-badge');
+        if (messagesBadge) {
+          if (unreadCount > 0) {
+            messagesBadge.textContent = unreadCount;
+            messagesBadge.style.display = 'flex';
+          } else {
+            messagesBadge.style.display = 'none';
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

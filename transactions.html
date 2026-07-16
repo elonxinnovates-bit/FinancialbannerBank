@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction History - Banner Bank Online Banking</title>
+  <link rel="icon" href="Icon.png" type="image/png">
+  <style>
+    /* Design Tokens & Resets */
+    :root {
+      --primary-blue: #003E7E;
+      --secondary-blue: #005B99;
+      --light-blue: #0D5B99;
+      --sidebar-bg: #EAEAEA;
+      --content-bg: #F4F5F7;
+      --white: #FFFFFF;
+      --text-dark: #333333;
+      --text-muted: #666666;
+      --text-light: #888888;
+      --border-color: #D1D5DB;
+      --card-border: #E5E7EB;
+
+      /* Account colors */
+      --checking-gold: #F5B324;
+      --savings-gold: #F39C12;
+      --investment-red: #E31B23;
+      --retirement-green: #8C9A21;
+      --expense-black: #1A1A1A;
+
+      --help-green: #6CA024;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--content-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: auto;
+    }
+
+    /* Header */
+    .header {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      height: 70px;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-right {
+      text-align: right;
+    }
+
+    .welcome-text {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .last-login {
+      font-size: 11px;
+      color: #A5CBEB;
+      font-style: italic;
+    }
+
+    /* Mobile hamburger toggle */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--white);
+      cursor: pointer;
+      padding: 8px;
+      margin-right: 12px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-menu-toggle:focus {
+      outline: none;
+    }
+
+    /* Main Container layout */
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 70px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--sidebar-bg);
+      flex-shrink: 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--border-color);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 16px 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 4px;
+    }
+
+    .menu-item-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      color: #4B5563;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .menu-item-link:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--primary-blue);
+    }
+
+    .menu-item-link.active {
+      background-color: var(--white);
+      color: var(--primary-blue);
+      border-left: 4px solid var(--primary-blue);
+      font-weight: bold;
+    }
+
+    .menu-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-chevron {
+      display: flex;
+      align-items: center;
+      color: #9CA3AF;
+      transition: transform 0.2s;
+    }
+
+    .badge {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* Submenu styling */
+    .submenu {
+      list-style: none;
+      padding-left: 48px;
+      margin: 4px 0 8px 0;
+      display: none;
+    }
+
+    .submenu-item-link {
+      display: block;
+      padding: 8px 0;
+      color: #6B7280;
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .submenu-item-link:hover {
+      color: var(--primary-blue);
+    }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      background-color: var(--content-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Section Container styles */
+    .section-container {
+      background-color: var(--white);
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .section-header {
+      background-color: #F8FAFC;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--primary-blue);
+      letter-spacing: 0.5px;
+    }
+
+    /* Summary Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background-color: var(--white);
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .stat-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary-blue);
+    }
+
+    .stat-value.credit {
+      color: #2ECC71;
+    }
+
+    .stat-value.debit {
+      color: #E74C3C;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    /* Filter Panel Styling */
+    .filter-panel {
+      padding: 20px;
+      background-color: #F8FAFC;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .filter-select,
+    .filter-input {
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 13px;
+      background-color: var(--white);
+      color: var(--text-dark);
+      outline: none;
+      width: 100%;
+    }
+
+    .filter-select:focus,
+    .filter-input:focus {
+      border-color: var(--primary-blue);
+    }
+
+    .btn-filter-reset {
+      background-color: #E2E8F0;
+      color: var(--text-dark);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      height: 38px;
+    }
+
+    .btn-filter-reset:hover {
+      background-color: #CBD5E1;
+    }
+
+    .btn-export {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-export:hover {
+      background-color: var(--secondary-blue);
+    }
+
+    /* Transactions Table Styling */
+    .table-responsive {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    .transactions-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .transactions-table th {
+      background-color: var(--white);
+      padding: 14px 20px;
+      font-weight: bold;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--card-border);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    .transactions-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-dark);
+      vertical-align: middle;
+    }
+
+    .transactions-table tr:hover {
+      background-color: #F8FAFC;
+    }
+
+    /* Amount colors */
+    .amount-credit {
+      color: #2ECC71;
+      font-weight: bold;
+    }
+
+    .amount-debit {
+      color: #333333;
+      font-weight: bold;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .badge-completed {
+      background-color: #DEF7EC;
+      color: #03543F;
+    }
+
+    .badge-pending {
+      background-color: #FEF08A;
+      color: #713F12;
+    }
+
+    .badge-processing {
+      background-color: #E0F2FE;
+      color: #0369A1;
+    }
+
+    .badge-failed {
+      background-color: #FDE8E8;
+      color: #9B1C1C;
+    }
+
+    /* Pagination */
+    .pagination-bar {
+      padding: 16px 20px;
+      background-color: var(--white);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pagination-info {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .pagination-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-pagination {
+      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--white);
+      color: var(--text-dark);
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-pagination:hover:not(:disabled) {
+      background-color: #F1F5F9;
+    }
+
+    .btn-pagination:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+      .sidebar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 999;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-toggle {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .main-content {
+        padding: 16px;
+      }
+
+      .filter-panel {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-group {
+        min-width: 100%;
+      }
+
+      .btn-export,
+      .btn-filter-reset {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header Banner -->
+  <header class="header">
+    <div class="header-left" style="display: flex; align-items: center;">
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+      </button>
+      <img src="Icon2.png" alt="Banner Bank Logo" style="width: 180px; height: auto; object-fit: contain;">
+    </div>
+    <div class="header-right">
+      <div class="welcome-text">Welcome back, Elite Cars Antiques</div>
+      <div class="last-login">Last login: 05/07/2026 at 09:12 AM</div>
+    </div>
+  </header>
+
+  <div class="app-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar-nav">
+      <nav>
+        <ul class="sidebar-menu">
+          <li>
+            <a href="dashboard.html" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                  </svg>
+                </span>
+                <span>Home</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="messages.html" class="menu-item-link" id="messages-menu-btn">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                  </svg>
+                </span>
+                <span>Messages</span>
+              </div>
+              <span class="badge" id="messages-badge" style="display: none;">0</span>
+            </a>
+          </li>
+          <li>
+            <a href="transactions.html" class="menu-item-link active">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z" />
+                  </svg>
+                </span>
+                <span>Transactions</span>
+              </div>
+              <span class="menu-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" />
+                  </svg>
+                </span>
+                <span>Bill Pay</span>
+              </div>
+              <span class="menu-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+
+          <li>
+            <a href="index.html" class="menu-item-link" id="menu-logout-btn">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                  </svg>
+                </span>
+                <span style="color: #DC2626; font-weight: bold;">Log Out</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Summary Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">Total Portfolio Assets</div>
+          <div class="stat-value">$8,004,348.48</div>
+          <div class="stat-sub">Updated just now</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Deposits & Inflow (30d)</div>
+          <div class="stat-value credit">+$1,485,320.00</div>
+          <div class="stat-sub">Across 5 active accounts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Payments & Outflow (30d)</div>
+          <div class="stat-value debit">-$192,340.50</div>
+          <div class="stat-sub">Withdrawals and transfers</div>
+        </div>
+      </div>
+
+      <!-- Transaction History Section -->
+      <section class="section-container">
+        <div class="section-header">
+          <h2 class="section-title">TRANSACTION HISTORY LEDGER</h2>
+          <button class="btn-export" onclick="window.print()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+            </svg>
+            <span>Print Statement</span>
+          </button>
+        </div>
+
+        <!-- Filter Panel -->
+        <div class="filter-panel">
+          <div class="filter-group">
+            <label class="filter-label" for="filter-search">Search Keyword</label>
+            <input type="text" id="filter-search" class="filter-input" placeholder="Search description, ID, or amount...">
+          </div>
+          <div class="filter-group">
+            <label class="filter-label" for="filter-account">Select Account</label>
+            <select id="filter-account" class="filter-select">
+              <option value="all">All Accounts</option>
+              <option value="checking">Checking (**5671)</option>
+              <option value="savings">Savings (**5672)</option>
+              <option value="investment">Investment (**5673)</option>
+              <option value="retirement">Retirement (**5674)</option>
+              <option value="expense">Expense (**5675)</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label" for="filter-type">Transaction Type</label>
+            <select id="filter-type" class="filter-select">
+              <option value="all">All Types</option>
+              <option value="credit">Credits (Deposits / Inflow)</option>
+              <option value="debit">Debits (Payments / Outflow)</option>
+            </select>
+          </div>
+          <button class="btn-filter-reset" id="btn-reset-filters">Reset</button>
+        </div>
+
+        <!-- Ledger Table -->
+        <div class="table-responsive">
+          <table class="transactions-table">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Transaction ID</th>
+                <th>Account</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th style="text-align: right;">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-bar">
+          <div class="pagination-info" id="pagination-text">Showing 1 to 10 of 10 entries</div>
+          <div class="pagination-controls">
+            <button class="btn-pagination" id="btn-prev" disabled>Previous</button>
+            <button class="btn-pagination" id="btn-next" disabled>Next</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Helper function to trigger FDIC loading screen and then redirect
+      function triggerLoadingAndRedirect(url) {
+        const loader = document.getElementById('loading-overlay');
+        if (loader) {
+          if (window.visualViewport) {
+            loader.style.width = window.visualViewport.width + 'px';
+            loader.style.height = window.visualViewport.height + 'px';
+            loader.style.left = window.visualViewport.offsetLeft + 'px';
+            loader.style.top = window.visualViewport.offsetTop + 'px';
+          }
+          loader.style.display = 'flex';
+        }
+        setTimeout(() => {
+          window.location.href = url;
+        }, 2000);
+      }
+
+      // Keep loader aligned during pinch zoom/scroll
+      function adjustLoader() {
+        const loader = document.getElementById('loading-overlay');
+        if (window.visualViewport && loader && loader.style.display !== 'none') {
+          loader.style.width = window.visualViewport.width + 'px';
+          loader.style.height = window.visualViewport.height + 'px';
+          loader.style.left = window.visualViewport.offsetLeft + 'px';
+          loader.style.top = window.visualViewport.offsetTop + 'px';
+        }
+      }
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', adjustLoader);
+        window.visualViewport.addEventListener('scroll', adjustLoader);
+      }
+
+      // Hamburger Toggle
+      const mobileToggle = document.getElementById('mobile-menu-toggle');
+      const sidebarNav = document.getElementById('sidebar-nav');
+      if (mobileToggle && sidebarNav) {
+        mobileToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = sidebarNav.classList.toggle('show');
+          if (isOpen) {
+            document.body.classList.add('no-scroll');
+          } else {
+            document.body.classList.remove('no-scroll');
+          }
+        });
+
+        // Close sidebar when clicking outside of it on mobile
+        document.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            if (!sidebarNav.contains(e.target) && e.target !== mobileToggle && !mobileToggle.contains(e.target)) {
+              sidebarNav.classList.remove('show');
+              document.body.classList.remove('no-scroll');
+            }
+          }
+        });
+      }
+
+      // Sidebar menu items click redirect with loader
+      const menuLinks = document.querySelectorAll('.menu-item-link');
+      menuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+          if (href && href !== '#') {
+            triggerLoadingAndRedirect(href);
+          }
+        });
+      });
+
+      // Rich Mock Transactions Dataset (Recent Loads)
+      const transactions = [
+        { date: '05/07/2026 at 09:12 AM', id: 'TXN-88746201', account: 'checking', desc: 'Wire Transfer Inward / Elite Cars Direct', type: 'credit', status: 'Completed', amount: '+$1,250,000.00' },
+        { date: '04/07/2026 at 05:40 PM', id: 'TXN-88745911', account: 'checking', desc: 'Mobile Deposit Check **5671', type: 'credit', status: 'Completed', amount: '+$1,250.00' },
+        { date: '04/07/2026 at 03:15 PM', id: 'TXN-88745809', account: 'savings', desc: 'Mobile Deposit Check **5672', type: 'credit', status: 'Completed', amount: '+$2,450.00' },
+        { date: '03/07/2026 at 11:15 AM', id: 'TXN-88744102', account: 'investment', desc: 'Online Dividend Payment US Growth Fund', type: 'credit', status: 'Completed', amount: '+$820.00' },
+        { date: '02/07/2026 at 09:00 AM', id: 'TXN-88743099', account: 'savings', desc: 'Auto Transfer Inbound / General Sweep', type: 'credit', status: 'Completed', amount: '+$500.00' },
+        { date: '01/07/2026 at 03:50 PM', id: 'TXN-88741122', account: 'checking', desc: 'ACH Payment Outbound / Dealer Distribution', type: 'debit', status: 'Completed', amount: '-$145,000.00' },
+        { date: '01/07/2026 at 10:20 AM', id: 'TXN-88741023', account: 'savings', desc: 'Mobile Deposit Check **5672', type: 'credit', status: 'Completed', amount: '+$1,100.00' },
+        { date: '30/06/2026 at 02:45 PM', id: 'TXN-88739451', account: 'retirement', desc: 'Quarterly IRA Account Rollover Inflow', type: 'credit', status: 'Completed', amount: '+$230,000.00' },
+        { date: '28/06/2026 at 01:10 PM', id: 'TXN-88738872', account: 'expense', desc: 'Card Purchase / Office Equipment Depo', type: 'debit', status: 'Completed', amount: '-$1,240.50' },
+        { date: '25/06/2026 at 10:30 AM', id: 'TXN-88737651', account: 'checking', desc: 'Mobile Deposit Check **5671', type: 'credit', status: 'Completed', amount: '+$1,500.00' },
+        { date: '22/06/2026 at 09:15 AM', id: 'TXN-88736190', account: 'investment', desc: 'Brokerage Stock Sell Settlement Inflow', type: 'credit', status: 'Completed', amount: '+$45,000.00' },
+        { date: '19/06/2026 at 04:45 PM', id: 'TXN-88735221', account: 'savings', desc: 'Mobile Deposit Check **5672', type: 'credit', status: 'Completed', amount: '+$620.00' },
+        { date: '15/06/2026 at 12:37 PM', id: 'TXN-88733092', account: 'savings', desc: 'Mobile Deposit Check **5672', type: 'credit', status: 'Completed', amount: '+$1,300.00' },
+        { date: '12/06/2026 at 10:15 AM', id: 'TXN-88732104', account: 'expense', desc: 'Vendor Payment Outbound / Auto Logistics', type: 'debit', status: 'Completed', amount: '-$46,100.00' },
+        { date: '11/06/2026 at 02:15 PM', id: 'TXN-88731998', account: 'savings', desc: 'Mobile Deposit Check **5672', type: 'credit', status: 'Completed', amount: '+$1,000.00' },
+        { date: '05/06/2026 at 11:20 AM', id: 'TXN-88729451', account: 'retirement', desc: 'Mobile Deposit Check **5674', type: 'credit', status: 'Completed', amount: '+$3,100.00' },
+        { date: '02/06/2026 at 08:30 AM', id: 'TXN-88727192', account: 'expense', desc: 'Corporate Insurances Premium Payment', type: 'debit', status: 'Completed', amount: '-$8,500.00' },
+        { date: '28/05/2026 at 01:10 PM', id: 'TXN-88725890', account: 'checking', desc: 'Mobile Deposit Check **5671', type: 'credit', status: 'Completed', amount: '+$850.00' },
+        { date: '25/05/2026 at 04:50 PM', id: 'TXN-88724128', account: 'checking', desc: 'Online Bill Pay / Energy Power Supply', type: 'debit', status: 'Completed', amount: '-$320.40' },
+        { date: '20/05/2026 at 10:00 AM', id: 'TXN-88722001', account: 'savings', desc: 'Mobile Deposit Check **5672', type: 'credit', status: 'Completed', amount: '+$120.00' },
+        { date: '18/05/2026 at 11:30 AM', id: 'TXN-88719874', account: 'investment', desc: 'Quarterly Mutual Fund Distribution Inward', type: 'credit', status: 'Completed', amount: '+$1,250.00' },
+        { date: '15/05/2026 at 02:22 PM', id: 'TXN-88717652', account: 'checking', desc: 'ACH Payment / Federal Tax Quarterly Return', type: 'debit', status: 'Completed', amount: '-$35,000.00' },
+        { date: '12/05/2026 at 09:10 AM', id: 'TXN-88715421', account: 'checking', desc: 'Interest Payment Earned checking account', type: 'credit', status: 'Completed', amount: '+$212.18' },
+        { date: '10/05/2026 at 03:40 PM', id: 'TXN-88713098', account: 'savings', desc: 'Wire Outward / Capital Equipments Inc', type: 'debit', status: 'Completed', amount: '-$85,000.00' },
+        { date: '08/05/2026 at 11:15 AM', id: 'TXN-88711092', account: 'retirement', desc: 'IRA Direct Deposit Inward Contribution', type: 'credit', status: 'Completed', amount: '+$6,500.00' },
+        { date: '05/05/2026 at 04:30 PM', id: 'TXN-88709871', account: 'expense', desc: 'Purchase / Office Cleaning Logistics', type: 'debit', status: 'Completed', amount: '-$450.00' }
+      ];
+
+      // Filters DOM
+      const filterSearch = document.getElementById('filter-search');
+      const filterAccount = document.getElementById('filter-account');
+      const filterType = document.getElementById('filter-type');
+      const btnReset = document.getElementById('btn-reset-filters');
+      const tbody = document.getElementById('transactions-tbody');
+      
+      const paginationText = document.getElementById('pagination-text');
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+
+      let currentPage = 1;
+      const rowsPerPage = 10;
+
+      // Cloud and Local Shared State Sync (jsonbin.io private bin storage)
+      const BIN_ID = '6a4adaa7f5f4af5e2963eb2e';
+      const MASTER_KEY = '$2a$10$Qbi4DlUKRBmW6Yh.ZCf94.0mqlsAeoDnBPUrvmnmer47fE6i6V5Au';
+      const CLOUD_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
+
+      function getSharedState() {
+        let state = null;
+        try {
+          if (window.name) {
+            state = JSON.parse(window.name);
+          }
+        } catch (e) {}
+
+        if (!state || !state.account_balances) {
+          try {
+            const storedBalances = localStorage.getItem('account_balances');
+            const storedTxns = localStorage.getItem('custom_transactions');
+            state = {
+              account_balances: storedBalances ? JSON.parse(storedBalances) : {
+                checking: 2412563.84,
+                savings: 1354209.11,
+                investment: 1302940.50,
+                retirement: 1689451.75,
+                expense: 1245183.28
+              },
+              custom_transactions: (storedTxns && storedTxns !== "undefined") ? JSON.parse(storedTxns) : []
+            };
+          } catch (e) {
+            state = {
+              account_balances: {
+                checking: 2412563.84,
+                savings: 1354209.11,
+                investment: 1302940.50,
+                retirement: 1689451.75,
+                expense: 1245183.28
+              },
+              custom_transactions: []
+            };
+          }
+          try { window.name = JSON.stringify(state); } catch (e) {}
+        }
+        if (state && (!state.custom_transactions || state.custom_transactions === "undefined")) {
+          state.custom_transactions = [];
+        }
+        return state;
+      }
+
+      function saveSharedState(state) {
+        try {
+          window.name = JSON.stringify(state);
+        } catch (e) {}
+        try {
+          localStorage.setItem('account_balances', JSON.stringify(state.account_balances));
+          localStorage.setItem('custom_transactions', JSON.stringify(state.custom_transactions));
+        } catch (e) {}
+
+        const activeUser = localStorage.getItem('active_user_id') || 'elitecars';
+
+        // Update local database copy first
+        try {
+          const localDbStr = localStorage.getItem('bank_database');
+          let localDb = localDbStr ? JSON.parse(localDbStr) : { profiles: {} };
+          if (!localDb.profiles) localDb.profiles = {};
+          const existingProfile = localDb.profiles[activeUser] || {};
+          localDb.profiles[activeUser] = {
+            ...existingProfile,
+            ...state
+          };
+          localStorage.setItem('bank_database', JSON.stringify(localDb));
+        } catch (e) {
+          console.error('Error updating local db copy:', e);
+        }
+
+        // Fetch master registry, update current user's profile, and write back
+        fetch(CLOUD_URL, {
+          headers: { 'X-Master-Key': MASTER_KEY }
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP status ' + res.status);
+          return res.json();
+        })
+        .then(data => {
+          if (!data || !data.record) throw new Error('Invalid JSONBin response');
+          const registry = data.record || { profiles: {} };
+          if (!registry.profiles) registry.profiles = {};
+          
+          const existingProfile = registry.profiles[activeUser] || {};
+          registry.profiles[activeUser] = {
+            ...existingProfile,
+            ...state
+          };
+
+          return fetch(CLOUD_URL, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Master-Key': MASTER_KEY
+            },
+            body: JSON.stringify(registry)
+          });
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP status ' + res.status);
+          return res.json();
+        })
+        .catch(err => console.log('Cloud save error:', err));
+      }
+
+      function syncWithCloud(onUpdateCallback) {
+        const activeUser = localStorage.getItem('active_user_id') || 'elitecars';
+        fetch(CLOUD_URL, {
+          headers: {
+            'X-Master-Key': MASTER_KEY
+          }
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP status ' + res.status);
+          return res.json();
+        })
+        .then(data => {
+          if (!data || !data.record) throw new Error('Invalid JSONBin response');
+          const registry = data.record;
+          // Save a copy of the synced registry
+          localStorage.setItem('bank_database', JSON.stringify(registry));
+
+          if (registry && registry.profiles && registry.profiles[activeUser]) {
+            const cloudState = registry.profiles[activeUser];
+            
+            // Ban check
+            if (cloudState.status === 'banned') {
+              localStorage.setItem('active_user_status', 'banned');
+              window.location.href = 'index.html?banned=true';
+              return;
+            }
+
+            applyCloudState(cloudState);
+          }
+        })
+        .catch(err => {
+          console.log('Cloud sync error, using local fallback:', err);
+          try {
+            const localDbStr = localStorage.getItem('bank_database');
+            if (localDbStr) {
+              const registry = JSON.parse(localDbStr);
+              if (registry && registry.profiles && registry.profiles[activeUser]) {
+                const cloudState = registry.profiles[activeUser];
+                if (cloudState.status === 'banned') {
+                  localStorage.setItem('active_user_status', 'banned');
+                  window.location.href = 'index.html?banned=true';
+                  return;
+                }
+                applyCloudState(cloudState);
+              }
+            }
+          } catch(e) {
+            console.error('Fallback sync failed:', e);
+          }
+        });
+
+        function applyCloudState(cloudState) {
+          let localTxns = [];
+          try {
+            const localStr = localStorage.getItem('custom_transactions');
+            if (localStr) localTxns = JSON.parse(localStr);
+          } catch(e){}
+
+          const cloudTxns = cloudState.custom_transactions || [];
+          const localIds = new Set(localTxns.map(t => t.id));
+          const mergedTxns = [...localTxns];
+          cloudTxns.forEach(t => {
+            if (!localIds.has(t.id)) {
+              mergedTxns.push(t);
+            }
+          });
+
+          mergedTxns.sort((a, b) => {
+            const parseDate = (dStr) => {
+              try {
+                if (dStr.includes('/')) {
+                  const parts = dStr.split(' at ');
+                  const dateParts = parts[0].split('/');
+                  const timeParts = parts[1].split(' ');
+                  const hm = timeParts[0].split(':');
+                  let h = parseInt(hm[0]);
+                  const m = parseInt(hm[1]);
+                  const isPM = timeParts[1] === 'PM';
+                  if (isPM && h < 12) h += 12;
+                  if (!isPM && h === 12) h = 0;
+                  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0], h, m);
+                } else {
+                  return new Date(dStr.replace(' at ', ' '));
+                }
+              } catch(e) {
+                return new Date(0);
+              }
+            };
+            return parseDate(b.date) - parseDate(a.date);
+          });
+
+          const cloudIds = new Set(cloudTxns.map(t => t.id));
+          const pendingTxns = localTxns.filter(t => !cloudIds.has(t.id));
+          
+          let accountBalances = cloudState.account_balances;
+          if (pendingTxns.length > 0) {
+            try {
+              const localBalStr = localStorage.getItem('account_balances');
+              if (localBalStr) accountBalances = JSON.parse(localBalStr);
+            } catch(e){}
+          }
+
+          const mergedState = {
+            ...cloudState,
+            account_balances: accountBalances,
+            custom_transactions: mergedTxns
+          };
+
+          try { window.name = JSON.stringify(mergedState); } catch(e){}
+          try {
+            localStorage.setItem('account_balances', JSON.stringify(accountBalances));
+            localStorage.setItem('custom_transactions', JSON.stringify(mergedTxns));
+            localStorage.setItem('active_user_fullname', cloudState.full_name || '');
+            localStorage.setItem('active_user_status', cloudState.status || 'active');
+          } catch(e){}
+
+          if (onUpdateCallback) onUpdateCallback(mergedState);
+        }
+      }
+
+      if (localStorage.getItem('active_user_status') === 'banned') {
+        window.location.href = 'index.html?banned=true';
+      }
+
+      function updateWelcomeMessage() {
+        const welcomeText = document.querySelector('.welcome-text');
+        if (welcomeText) {
+          const fullName = localStorage.getItem('active_user_fullname') || 'Elite Cars Antiques';
+          welcomeText.textContent = 'Welcome back, ' + fullName;
+        }
+      }
+
+      updateWelcomeMessage();
+
+      const sharedState = getSharedState();
+      const customTxns = sharedState.custom_transactions || [];
+      const initialCustomIds = new Set(customTxns.map(t => t.id));
+      let allTransactions = [...customTxns, ...transactions.filter(t => !initialCustomIds.has(t.id))];
+
+      function getBalances() {
+        return getSharedState().account_balances;
+      }
+
+      function updateStats() {
+        const balances = getBalances();
+        const total = balances.checking + balances.savings + balances.investment + balances.retirement + balances.expense;
+        
+        let inflow = 0;
+        let outflow = 0;
+
+        allTransactions.forEach(txn => {
+          // Parse amount (strip currency symbols and commas)
+          const cleanAmt = parseFloat((txn.amount || '').replace(/[+\-$,]/g, ''));
+          if (!isNaN(cleanAmt)) {
+            if (txn.type === 'credit') {
+              inflow += cleanAmt;
+            } else {
+              outflow += cleanAmt;
+            }
+          }
+        });
+
+        const statCards = document.querySelectorAll('.stat-card .stat-value');
+        if (statCards.length > 0) {
+          statCards[0].textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          statCards[1].textContent = '+$' + inflow.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          statCards[2].textContent = '-$' + outflow.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+      }
+      updateStats();
+      
+      // Parse initial filter from URL parameter
+      const params = new URLSearchParams(window.location.search);
+      const initialAccount = params.get('account');
+      if (initialAccount && ['checking', 'savings', 'investment', 'retirement', 'expense'].includes(initialAccount)) {
+        filterAccount.value = initialAccount;
+      }
+
+      let filteredData = [...allTransactions];
+      if (filterAccount.value !== 'all') {
+        filteredData = allTransactions.filter(txn => txn.account === filterAccount.value);
+      }
+
+      function renderTable() {
+        tbody.innerHTML = '';
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = Math.min(startIndex + rowsPerPage, filteredData.length);
+        const pageData = filteredData.slice(startIndex, endIndex);
+
+        if (pageData.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-light); padding: 30px;">
+                No matching transactions found. Try adjusting your filters.
+              </td>
+            </tr>
+          `;
+          paginationText.textContent = 'Showing 0 to 0 of 0 entries';
+          btnPrev.disabled = true;
+          btnNext.disabled = true;
+          return;
+        }
+
+        pageData.forEach(txn => {
+          const tr = document.createElement('tr');
+          const isCredit = txn.type === 'credit';
+          const amountClass = isCredit ? 'amount-credit' : 'amount-debit';
+          
+          let accountName = txn.account.charAt(0).toUpperCase() + txn.account.slice(1);
+          if (txn.account === 'checking') accountName += ' (**5671)';
+          if (txn.account === 'savings') accountName += ' (**5672)';
+          if (txn.account === 'investment') accountName += ' (**5673)';
+          if (txn.account === 'retirement') accountName += ' (**5674)';
+          if (txn.account === 'expense') accountName += ' (**5675)';
+
+          const badgeClass = txn.status === 'Completed' ? 'badge-completed' : 
+                             (txn.status === 'Processing' ? 'badge-processing' : 
+                             (txn.status === 'Pending' ? 'badge-pending' : 'badge-failed'));
+
+          tr.innerHTML = `
+            <td style="font-weight: 500;">${txn.date}</td>
+            <td style="font-family: monospace; color: var(--text-muted);">${txn.id}</td>
+            <td><span style="font-weight: 600;">${accountName}</span></td>
+            <td>${txn.desc}</td>
+            <td><span class="status-badge ${badgeClass}">${txn.status}</span></td>
+            <td style="text-align: right;" class="${amountClass}">${txn.amount}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Update pagination UI
+        paginationText.textContent = `Showing ${startIndex + 1} to ${endIndex} of ${filteredData.length} entries`;
+        btnPrev.disabled = currentPage === 1;
+        btnNext.disabled = endIndex >= filteredData.length;
+      }
+
+      function applyFilters() {
+        const searchVal = filterSearch.value.toLowerCase().trim();
+        const accountVal = filterAccount.value;
+        const typeVal = filterType.value;
+
+        filteredData = allTransactions.filter(txn => {
+          // Search match
+          const matchesSearch = !searchVal || 
+            txn.desc.toLowerCase().includes(searchVal) || 
+            txn.id.toLowerCase().includes(searchVal) || 
+            txn.amount.toLowerCase().includes(searchVal);
+          
+          // Account match
+          const matchesAccount = accountVal === 'all' || txn.account === accountVal;
+          
+          // Type match
+          const matchesType = typeVal === 'all' || txn.type === typeVal;
+
+          return matchesSearch && matchesAccount && matchesType;
+        });
+
+        currentPage = 1;
+        renderTable();
+      }
+
+      // Event Listeners
+      filterSearch.addEventListener('input', applyFilters);
+      filterAccount.addEventListener('change', applyFilters);
+      filterType.addEventListener('change', applyFilters);
+
+      btnReset.addEventListener('click', () => {
+        filterSearch.value = '';
+        filterAccount.value = 'all';
+        filterType.value = 'all';
+        filteredData = [...allTransactions];
+        currentPage = 1;
+        renderTable();
+      });
+
+      btnPrev.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderTable();
+        }
+      });
+
+      btnNext.addEventListener('click', () => {
+        const maxPage = Math.ceil(filteredData.length / rowsPerPage);
+        if (currentPage < maxPage) {
+          currentPage++;
+          renderTable();
+        }
+      });
+
+      // Initial Render
+      renderTable();
+      updateMessagesBadge();
+       syncWithCloud((cloudState) => {
+        const newCustomTxns = cloudState.custom_transactions || [];
+        const customIds = new Set(newCustomTxns.map(t => t.id));
+        allTransactions = [...newCustomTxns, ...transactions.filter(t => !customIds.has(t.id))];
+        updateStats();
+        applyFilters();
+        updateMessagesBadge();
+      });
+
+      // Poll every 15s so admin changes reflect automatically
+      setInterval(() => {
+        syncWithCloud((cloudState) => {
+          const newCustomTxns = cloudState.custom_transactions || [];
+          const customIds = new Set(newCustomTxns.map(t => t.id));
+          allTransactions = [...newCustomTxns, ...transactions.filter(t => !customIds.has(t.id))];
+          updateStats();
+          applyFilters();
+          updateMessagesBadge();
+        });
+      }, 15000);
+
+      function updateMessagesBadge() {
+        const state = getSharedState();
+        const txns = state.custom_transactions || [];
+        
+        let readIds = [];
+        try {
+          const readStr = localStorage.getItem('read_message_ids');
+          if (readStr) readIds = JSON.parse(readStr);
+        } catch(e){}
+
+        let clearedIds = [];
+        try {
+          const clearedStr = localStorage.getItem('cleared_message_ids');
+          if (clearedStr) clearedIds = JSON.parse(clearedStr);
+        } catch(e){}
+
+        const visibleTxns = txns.filter(t => !clearedIds.includes(t.id));
+        const unreadCount = visibleTxns.filter(t => !readIds.includes(t.id)).length;
+        
+        const messagesBadge = document.getElementById('messages-badge');
+        if (messagesBadge) {
+          if (unreadCount > 0) {
+            messagesBadge.textContent = unreadCount;
+            messagesBadge.style.display = 'flex';
+          } else {
+            messagesBadge.style.display = 'none';
+          }
+        }
+      }
+    });
+  </script>
+  <!-- Fullscreen Loading Overlay -->
+  <style>
+    body.no-scroll {
+      overflow: hidden !important;
+      height: 100% !important;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @media (max-width: 480px) {
+      #loading-overlay img {
+        height: 50px !important;
+        margin-bottom: 20px !important;
+      }
+      #loading-overlay div:last-child {
+        font-size: 11px !important;
+        padding: 16px 12px !important;
+      }
+      #loading-overlay div:last-child span:first-child {
+        font-size: 9px !important;
+        padding: 1px 4px !important;
+        margin-right: 4px !important;
+      }
+    }
+  </style>
+  <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background-color: #003E7E; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: #FFFFFF; font-family: Arial, sans-serif;">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
+      <img src="Icon2.png" alt="Banner Bank Logo" style="height: 70px; margin-bottom: 30px; animation: pulse 1.5s infinite ease-in-out;">
+      <!-- Loading spinner -->
+      <div style="width: 40px; height: 40px; border: 3px solid rgba(255, 255, 255, 0.2); border-top-color: #FFFFFF; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+    </div>
+    <!-- FDIC footer block in the loader -->
+    <div style="padding: 24px 20px; text-align: center; font-size: 13px; opacity: 0.9; border-top: 1px solid rgba(255, 255, 255, 0.1); width: 100%; box-sizing: border-box; background-color: rgba(0, 0, 0, 0.15);">
+      <span style="background-color: #FFFFFF; color: #003E7E; font-weight: bold; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-right: 8px; display: inline-block; vertical-align: middle; line-height: 1;">FDIC</span>
+      <span style="display: inline-block; vertical-align: middle;">FDIC-Insured - Backed by the full faith and credit of the U.S. Government</span>
+    </div>
+  </div>
+</body>
+
+</html>

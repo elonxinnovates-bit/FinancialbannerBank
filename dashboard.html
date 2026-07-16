@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Banner Bank Online Banking</title>
+  <link rel="icon" href="Icon.png" type="image/png">
+  <style>
+    /* Design Tokens & Resets */
+    :root {
+      --primary-blue: #003E7E;
+      --secondary-blue: #005B99;
+      --light-blue: #0D5B99;
+      --sidebar-bg: #EAEAEA;
+      --content-bg: #F4F5F7;
+      --white: #FFFFFF;
+      --text-dark: #333333;
+      --text-muted: #666666;
+      --text-light: #888888;
+      --border-color: #D1D5DB;
+      --card-border: #E5E7EB;
+
+      /* Account card side-borders */
+      --checking-gold: #F5B324;
+      --savings-gold: #F39C12;
+      --investment-red: #E31B23;
+      --retirement-green: #8C9A21;
+      --expense-black: #1A1A1A;
+
+      --help-green: #6CA024;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--content-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: auto;
+    }
+
+    /* Header */
+    .header {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      height: 70px;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-right {
+      text-align: right;
+    }
+
+    .welcome-text {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .last-login {
+      font-size: 11px;
+      color: #A5CBEB;
+      font-style: italic;
+    }
+
+    /* Main Container layout */
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 70px);
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 10px 0;
+    }
+
+    .menu-item-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    .menu-item-link:hover {
+      background-color: #E2E8F0;
+    }
+
+    .menu-item-link.active {
+      background-color: #E2E8F0;
+      font-weight: bold;
+    }
+
+    .menu-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-icon {
+      color: var(--primary-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+    }
+
+    .menu-chevron {
+      color: #777777;
+      display: flex;
+      align-items: center;
+    }
+
+    .badge {
+      background-color: #E31B23;
+      color: var(--white);
+      border-radius: 50%;
+      font-size: 11px;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* Sub-menu styling for Commercial Services */
+    .submenu {
+      list-style: none;
+      background-color: #E0E0E0;
+    }
+
+    .submenu-item-link {
+      display: block;
+      padding: 10px 20px 10px 52px;
+      font-size: 13px;
+      color: var(--text-dark);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .submenu-item-link:hover {
+      background-color: #D5D5D5;
+    }
+
+    /* Manage Users highlight ring removed as requested */
+
+    /* Main Content Wrapper */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      background-color: var(--white);
+    }
+
+    /* Central Panel */
+    .center-panel {
+      flex: 1;
+      padding: 24px 32px;
+      overflow-y: auto;
+    }
+
+    .page-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 500;
+      color: #111827;
+    }
+
+    .printer-icon {
+      color: #4B5563;
+      cursor: pointer;
+    }
+
+    /* Section Styles */
+    .section-container {
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid transparent;
+    }
+
+    .section-title-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #374151;
+      letter-spacing: 0.5px;
+    }
+
+    .edit-icon {
+      color: #9CA3AF;
+      cursor: pointer;
+    }
+
+    .section-toggle {
+      color: #6B7280;
+      cursor: pointer;
+    }
+
+    /* Accounts Grid */
+    .accounts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .account-card {
+      background-color: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 16px 20px;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .account-card.full-width {
+      grid-column: span 2;
+      max-width: calc(50% - 10px);
+    }
+
+    /* Vertical Colored Side Border */
+    .card-accent-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    .accent-checking {
+      background-color: var(--checking-gold);
+    }
+
+    .accent-savings {
+      background-color: var(--savings-gold);
+    }
+
+    .accent-investment {
+      background-color: var(--investment-red);
+    }
+
+    .accent-retirement {
+      background-color: var(--retirement-green);
+    }
+
+    .accent-expense {
+      background-color: var(--expense-black);
+    }
+
+    .card-options-btn {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      cursor: pointer;
+      color: var(--text-dark);
+      background: none;
+      border: none;
+    }
+
+    .account-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      padding-right: 20px;
+    }
+
+    .balance-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .balance-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .balance-val {
+      font-weight: bold;
+      color: var(--text-dark);
+    }
+
+    /* Asset Summary Section */
+    .asset-summary-box {
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 24px;
+      background-color: var(--white);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .asset-summary-content {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+
+    /* SVG Donut Chart */
+    .donut-chart-container {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      flex-shrink: 0;
+    }
+
+    /* Chart Details (Legend) */
+    .chart-details-panel {
+      flex: 1;
+    }
+
+    .details-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .details-color-indicator {
+      width: 6px;
+      height: 24px;
+      background-color: var(--checking-gold);
+      border-radius: 2px;
+    }
+
+    .details-account-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--text-dark);
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 40px;
+      row-gap: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .details-label {
+      color: var(--text-muted);
+    }
+
+    .details-val {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .details-link {
+      color: var(--light-blue);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .details-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Right Sidebar */
+    .right-sidebar {
+      width: 320px;
+      border-left: 1px solid var(--border-color);
+      background-color: #F9FAFB;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    /* Transfer Money Link Card */
+    .transfer-link-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background-color: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--primary-blue);
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.2s;
+    }
+
+    .transfer-link-card:hover {
+      background-color: #F3F4F6;
+    }
+
+    /* Deposit History widget */
+    .history-card {
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      overflow: hidden;
+      background-color: var(--white);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .history-header {
+      background-color: var(--secondary-blue);
+      color: var(--white);
+      padding: 14px 16px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .history-body {
+      padding: 16px;
+    }
+
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 38px;
+      padding: 0 12px 0 36px;
+      font-size: 13px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--secondary-blue);
+    }
+
+    .search-icon-svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9CA3AF;
+      pointer-events: none;
+    }
+
+    /* History filters tabs */
+    .filter-tabs {
+      display: flex;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .filter-tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: #4B5563;
+      background-color: #F9FAFB;
+      border: none;
+      border-right: 1px solid var(--border-color);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .filter-tab:last-child {
+      border-right: none;
+    }
+
+    .filter-tab.active {
+      background-color: var(--primary-blue);
+      color: var(--white);
+    }
+
+    .no-history-text {
+      text-align: center;
+      font-style: italic;
+      color: var(--text-light);
+      font-size: 13px;
+      padding: 16px 0;
+    }
+
+    /* Help floating button */
+    .help-float-btn {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 44px;
+      height: 44px;
+      background-color: var(--help-green);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      border: none;
+      outline: none;
+      z-index: 1000;
+      transition: transform 0.2s;
+    }
+
+    .help-float-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Selected Account Card & Clickability */
+    .account-card {
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+
+    .account-card:hover {
+      border-color: #A0AEC0;
+      transform: translateY(-1px);
+    }
+
+    .account-card.selected {
+      border-color: var(--primary-blue) !important;
+      box-shadow: 0 0 0 3px rgba(0, 62, 126, 0.15), 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Options Dropdown Menu for Cards */
+    .card-options-wrapper {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      z-index: 10;
+    }
+
+    .card-dropdown-menu {
+      position: absolute;
+      right: 0;
+      top: 28px;
+      background-color: var(--white);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      width: 140px;
+      display: none;
+      flex-direction: column;
+      z-index: 20;
+    }
+
+    .card-dropdown-menu.show {
+      display: flex;
+    }
+
+    .card-dropdown-item {
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: var(--text-dark);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .card-dropdown-item:hover {
+      background-color: #F3F4F6;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(3px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-box {
+      background-color: var(--white);
+      border-radius: 6px;
+      width: 420px;
+      max-width: 90%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.show .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      padding: 16px 20px;
+      font-weight: bold;
+      font-size: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 24px 20px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .modal-footer {
+      padding: 12px 20px;
+      background-color: #F9FAFB;
+      border-top: 1px solid var(--card-border);
+      text-align: right;
+    }
+
+    .modal-btn {
+      padding: 8px 16px;
+      background-color: var(--secondary-blue);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .modal-btn:hover {
+      background-color: var(--primary-blue);
+    }
+
+    /* History Items List */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left;
+    }
+
+    .history-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .history-item-date {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .history-item-right {
+      text-align: right;
+    }
+
+    .history-item-amount {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .history-item-status {
+      font-size: 10px;
+      font-weight: bold;
+      padding: 1px 6px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .status-submitted {
+      background-color: #FEF3C7;
+      color: #D97706;
+    }
+
+    .status-accepted {
+      background-color: #D1FAE5;
+      color: #059669;
+    }
+
+    .status-processing {
+      background-color: #E0F2FE;
+      color: #0369A1;
+    }
+
+    .status-failed {
+      background-color: #FEE2E2;
+      color: #DC2626;
+    }
+
+    /* General Collapsible transition */
+    .accounts-grid,
+    .asset-summary-box {
+      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+      max-height: 1000px;
+      opacity: 1;
+      overflow: hidden;
+    }
+
+    .accounts-grid.collapsed,
+    .asset-summary-box.collapsed {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-bottom: 0;
+      pointer-events: none;
+    }
+
+    .section-toggle svg {
+      transition: transform 0.3s ease;
+    }
+
+    .section-toggle.collapsed svg {
+      transform: rotate(180deg);
+    }
+
+    /* Mobile Menu Toggle Button styling */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--white);
+      cursor: pointer;
+      padding: 8px;
+      margin-right: 12px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-menu-toggle:focus {
+      outline: none;
+    }
+
+    /* Tablet Responsive styles */
+    @media (max-width: 1100px) {
+      .main-wrapper {
+        flex-direction: column;
+        overflow: visible;
+      }
+      .right-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+        padding: 24px 16px;
+        overflow: visible;
+        flex-shrink: 0;
+      }
+    }
+
+    /* Mobile Responsive styles */
+    @media (max-width: 768px) {
+      .mobile-menu-toggle {
+        display: flex;
+      }
+
+      .app-container {
+        height: auto;
+        min-height: calc(100vh - 70px);
+        overflow: visible;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 70px;
+        left: -250px;
+        bottom: 0;
+        z-index: 1000;
+        width: 250px;
+        transition: left 0.3s ease;
+        background-color: var(--sidebar-bg);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .sidebar.show {
+        left: 0;
+      }
+
+      .main-wrapper {
+        flex-direction: column;
+        overflow: visible;
+      }
+
+      .center-panel {
+        padding: 16px;
+        overflow: visible;
+        flex: none;
+      }
+
+      .right-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+        padding: 24px 16px;
+        overflow: visible;
+        flex-shrink: 0;
+      }
+
+      .accounts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .account-card.full-width {
+        max-width: 100%;
+      }
+
+      .asset-summary-content {
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+        text-align: center;
+      }
+
+      .chart-details-panel {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header Banner -->
+  <header class="header">
+    <div class="header-left" style="display: flex; align-items: center;">
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+      </button>
+      <img src="Icon2.png" alt="Banner Bank Logo" style="width: 180px; height: auto; object-fit: contain;">
+    </div>
+    <div class="header-right">
+      <div class="welcome-text" id="welcome-text-msg">Welcome back, Elite Cars Antiques</div>
+    </div>
+  </header>
+
+  <div class="app-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <nav>
+        <ul class="sidebar-menu">
+          <li>
+            <a href="dashboard.html" class="menu-item-link active">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                  </svg>
+                </span>
+                <span>Home</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="messages.html" class="menu-item-link" id="messages-menu-btn">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                  </svg>
+                </span>
+                <span>Messages</span>
+              </div>
+              <span class="badge" id="messages-badge" style="display: none;">0</span>
+            </a>
+          </li>
+          <li>
+            <a href="transactions.html" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z" />
+                  </svg>
+                </span>
+                <span>Transactions</span>
+              </div>
+              <span class="menu-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" />
+                  </svg>
+                </span>
+                <span>Bill Pay</span>
+              </div>
+              <span class="menu-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                  </svg>
+                </span>
+                <span>Services</span>
+              </div>
+              <span class="menu-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+                </span>
+                <span>Open Account</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+                  </svg>
+                </span>
+                <span>Settings</span>
+              </div>
+              <span class="menu-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z" />
+                  </svg>
+                </span>
+                <span>Help</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                  </svg>
+                </span>
+                <span>Terms</span>
+              </div>
+              <span class="menu-chevron">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                  </svg>
+                </span>
+                <span>Branches</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="index.html" class="menu-item-link">
+              <div class="menu-item-left">
+                <span class="menu-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+                  </svg>
+                </span>
+                <span>Log Off</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Content Workspace -->
+    <div class="main-wrapper">
+
+      <!-- Central Panel -->
+      <main class="center-panel">
+
+        <!-- Page Title Row -->
+        <div class="page-title-row">
+          <h1 class="page-title">Home</h1>
+          <span class="printer-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <path
+                d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" />
+            </svg>
+          </span>
+        </div>
+
+        <!-- Accounts Summary -->
+        <section class="section-container">
+          <div class="section-header">
+            <div class="section-title-wrapper">
+              <h2 class="section-title">ACCOUNTS</h2>
+
+            </div>
+            <span class="section-toggle">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+              </svg>
+            </span>
+          </div>
+
+          <div class="accounts-grid">
+            <!-- Checking -->
+            <div class="account-card selected" data-id="checking">
+              <div class="card-accent-bar accent-checking"></div>
+              <div class="card-options-wrapper">
+                <button class="card-options-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                  </svg>
+                </button>
+                <div class="card-dropdown-menu">
+                  <button class="card-dropdown-item cmd-view">View Details</button>
+                  <button class="card-dropdown-item cmd-transfer">Transfer Funds</button>
+                  <button class="card-dropdown-item cmd-rename">Rename Account</button>
+                </div>
+              </div>
+              <h3 class="account-name">Checking **5671</h3>
+              <div class="balance-row">
+                <span>Current Balance</span>
+                <span class="balance-val">$2,412,563.84</span>
+              </div>
+              <div class="balance-row">
+                <span>Available Balance(s)</span>
+                <span class="balance-val">$2,412,563.84</span>
+              </div>
+            </div>
+
+            <!-- Savings -->
+            <div class="account-card" data-id="savings">
+              <div class="card-accent-bar accent-savings"></div>
+              <div class="card-options-wrapper">
+                <button class="card-options-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                  </svg>
+                </button>
+                <div class="card-dropdown-menu">
+                  <button class="card-dropdown-item cmd-view">View Details</button>
+                  <button class="card-dropdown-item cmd-transfer">Transfer Funds</button>
+                  <button class="card-dropdown-item cmd-rename">Rename Account</button>
+                </div>
+              </div>
+              <h3 class="account-name">Savings **5672</h3>
+              <div class="balance-row">
+                <span>Current Balance</span>
+                <span class="balance-val">$1,354,209.11</span>
+              </div>
+              <div class="balance-row">
+                <span>Available Balance(s)</span>
+                <span class="balance-val">$1,354,209.11</span>
+              </div>
+            </div>
+
+            <!-- Investment Account -->
+            <div class="account-card" data-id="investment">
+              <div class="card-accent-bar accent-investment"></div>
+              <div class="card-options-wrapper">
+                <button class="card-options-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                  </svg>
+                </button>
+                <div class="card-dropdown-menu">
+                  <button class="card-dropdown-item cmd-view">View Details</button>
+                  <button class="card-dropdown-item cmd-transfer">Transfer Funds</button>
+                  <button class="card-dropdown-item cmd-rename">Rename Account</button>
+                </div>
+              </div>
+              <h3 class="account-name">Investment Account **5673</h3>
+              <div class="balance-row">
+                <span>Current Balance</span>
+                <span class="balance-val">$1,302,940.50</span>
+              </div>
+            </div>
+
+            <!-- Retirement Savings -->
+            <div class="account-card" data-id="retirement">
+              <div class="card-accent-bar accent-retirement"></div>
+              <div class="card-options-wrapper">
+                <button class="card-options-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                  </svg>
+                </button>
+                <div class="card-dropdown-menu">
+                  <button class="card-dropdown-item cmd-view">View Details</button>
+                  <button class="card-dropdown-item cmd-transfer">Transfer Funds</button>
+                  <button class="card-dropdown-item cmd-rename">Rename Account</button>
+                </div>
+              </div>
+              <h3 class="account-name">Retirement Savings **5674</h3>
+              <div class="balance-row">
+                <span>Current Balance</span>
+                <span class="balance-val">$1,689,451.75</span>
+              </div>
+            </div>
+
+            <!-- Expense Account -->
+            <div class="account-card full-width" data-id="expense">
+              <div class="card-accent-bar accent-expense"></div>
+              <div class="card-options-wrapper">
+                <button class="card-options-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
+                    fill="currentColor">
+                    <path
+                      d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                  </svg>
+                </button>
+                <div class="card-dropdown-menu">
+                  <button class="card-dropdown-item cmd-view">View Details</button>
+                  <button class="card-dropdown-item cmd-transfer">Transfer Funds</button>
+                  <button class="card-dropdown-item cmd-rename">Rename Account</button>
+                </div>
+              </div>
+              <h3 class="account-name">Expense Account **5675</h3>
+              <div class="balance-row">
+                <span>Current Balance</span>
+                <span class="balance-val">$1,245,183.28</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Asset Summary -->
+        <section class="section-container">
+          <div class="section-header">
+            <div class="section-title-wrapper">
+              <h2 class="section-title">ASSET SUMMARY</h2>
+            </div>
+            <span class="section-toggle">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+              </svg>
+            </span>
+          </div>
+
+          <div class="asset-summary-box">
+            <div class="asset-summary-content">
+              <!-- SVG Donut Chart -->
+              <div class="donut-chart-container">
+                <svg width="140" height="140" viewBox="0 0 120 120">
+                  <!-- Segment 1 (Checking - Gold, 30.14%) -->
+                  <circle cx="60" cy="60" r="50" fill="transparent" stroke="#F5B324" stroke-width="14"
+                    stroke-dasharray="94.69 314.16" stroke-dashoffset="0" transform="rotate(-90 60 60)" />
+                  <!-- Segment 2 (Savings - Orange-Gold, 16.92%) -->
+                  <circle cx="60" cy="60" r="50" fill="transparent" stroke="#F39C12" stroke-width="14"
+                    stroke-dasharray="53.16 314.16" stroke-dashoffset="-94.69" transform="rotate(-90 60 60)" />
+                  <!-- Segment 3 (Investment - Red, 16.28%) -->
+                  <circle cx="60" cy="60" r="50" fill="transparent" stroke="#E31B23" stroke-width="14"
+                    stroke-dasharray="51.15 314.16" stroke-dashoffset="-147.85" transform="rotate(-90 60 60)" />
+                  <!-- Segment 4 (Retirement - Green, 21.10%) -->
+                  <circle cx="60" cy="60" r="50" fill="transparent" stroke="#8C9A21" stroke-width="14"
+                    stroke-dasharray="66.29 314.16" stroke-dashoffset="-199.00" transform="rotate(-90 60 60)" />
+                  <!-- Segment 5 (Expense - Black, 15.56%) -->
+                  <circle cx="60" cy="60" r="50" fill="transparent" stroke="#1A1A1A" stroke-width="14"
+                    stroke-dasharray="48.88 314.16" stroke-dashoffset="-265.29" transform="rotate(-90 60 60)" />
+                  <!-- Center hole -->
+                  <circle cx="60" cy="60" r="42" fill="#ffffff" />
+                  <!-- Labels on slices -->
+                  <text x="90" y="32" fill="#ffffff" font-size="7" font-weight="bold">30.1%</text>
+                  <text x="96" y="74" fill="#ffffff" font-size="7" font-weight="bold">16.9%</text>
+                  <text x="68" y="98" fill="#ffffff" font-size="7" font-weight="bold">16.3%</text>
+                  <text x="22" y="74" fill="#ffffff" font-size="7" font-weight="bold">21.1%</text>
+                  <text x="36" y="36" fill="#ffffff" font-size="7" font-weight="bold">15.6%</text>
+                  <!-- Center text -->
+                  <text x="60" y="58" text-anchor="middle" font-size="8" font-weight="bold"
+                    fill="#333333">$8,004,348.48</text>
+                  <text x="60" y="70" text-anchor="middle" font-size="6" fill="#888888" font-weight="bold"
+                    letter-spacing="0.2px">Total Assets</text>
+                </svg>
+              </div>
+
+              <!-- Legend detail -->
+              <div class="chart-details-panel">
+                <div class="details-header">
+                  <div class="details-color-indicator"></div>
+                  <span class="details-account-name">Checking</span>
+                </div>
+                <div class="details-grid">
+                  <div class="details-label">Account Number</div>
+                  <div class="details-val">XXXXXX5671</div>
+
+                  <div class="details-label">Percentage of Total Assets</div>
+                  <div class="details-val">30.14%</div>
+
+                  <div class="details-label">Current Balance</div>
+                  <div class="details-val">$2,412,563.84</div>
+
+                  <div class="details-label">Available Balance(s)</div>
+                  <div class="details-val">$2,412,563.84</div>
+                </div>
+                <a href="transactions.html" class="details-link">View Transactions</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Right Sidebar -->
+      <aside class="right-sidebar">
+        <!-- Transfer Money card link -->
+        <a href="transfer.html" class="transfer-link-card">
+          <span>Transfer Money Now</span>
+          <span style="color: var(--secondary-blue);">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
+            </svg>
+          </span>
+        </a>
+
+        <!-- Deposit History card -->
+        <div class="history-card">
+          <div class="history-header">Snapshot Deposit History</div>
+          <div class="history-body">
+            <!-- Search field -->
+            <div class="search-wrapper">
+              <span class="search-icon-svg">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path
+                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+              </span>
+              <input type="text" class="search-input" placeholder="Search transactions">
+            </div>
+
+            <!-- Tab Filters -->
+            <div class="filter-tabs">
+              <button class="filter-tab">All</button>
+              <button class="filter-tab active">Submitted</button>
+              <button class="filter-tab">Accepted</button>
+            </div>
+
+            <!-- History List content -->
+            <div class="no-history-text">No History Available</div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- Help floating action button -->
+  <button class="help-float-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+      <path
+        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2-2.76 0-5 2.24-5 5h2c0-1.66 1.34-3 3-3s3 1.34 3 3c0 .88-.36 1.67-.93 2.25z" />
+    </svg>
+  </button>
+
+  <!-- Support Modal -->
+  <div class="modal-overlay" id="support-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>Banner Bank Support</span>
+        <button class="modal-close-btn" id="support-modal-close-x">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: left;">
+        <p style="margin-bottom: 12px; font-weight: 500;">Need assistance with your Banner Bank accounts?</p>
+        <p style="color: var(--text-muted); margin-bottom: 16px;">Our virtual assistant is available 24/7.
+          Alternatively, you can speak with our customer care representatives by calling:</p>
+        <div
+          style="background-color: #F3F4F6; padding: 12px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 16px; color: var(--primary-blue); margin-bottom: 8px;">
+          1-800-272-9993
+        </div>
+        <p style="font-size: 11px; color: var(--text-light); text-align: center;">Hours: Mon-Fri 7 AM - 7 PM PST</p>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" id="support-modal-close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Data definitions for account legend switcher
+      const accountsData = {
+        checking: {
+          name: 'Checking',
+          color: 'var(--checking-gold)',
+          num: 'XXXXXX5671',
+          pct: '30.14%',
+          curr: '$2,412,563.84',
+          avail: '$2,412,563.84'
+        },
+        savings: {
+          name: 'Savings',
+          color: 'var(--savings-gold)',
+          num: 'XXXXXX5672',
+          pct: '16.92%',
+          curr: '$1,354,209.11',
+          avail: '$1,354,209.11'
+        },
+        investment: {
+          name: 'Investment Account',
+          color: 'var(--investment-red)',
+          num: 'XXXXXX5673',
+          pct: '16.28%',
+          curr: '$1,302,940.50',
+          avail: null
+        },
+        retirement: {
+          name: 'Retirement Savings',
+          color: 'var(--retirement-green)',
+          num: 'XXXXXX5674',
+          pct: '21.10%',
+          curr: '$1,689,451.75',
+          avail: null
+        },
+        expense: {
+          name: 'Expense Account',
+          color: 'var(--expense-black)',
+          num: 'XXXXXX5675',
+          pct: '15.56%',
+          curr: '$1,245,183.28',
+          avail: null
+        }
+      };
+
+      // Mock Transaction History Data
+      const transactionsHistory = {
+        all: [
+          { title: 'Mobile Deposit **5671', date: '📆 04/07/2026 at 05:40 PM', amount: '$1,250.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5672', date: '04/07/2026 at 03:15 PM', amount: '$2,450.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5673', date: '03/07/2026 at 11:15 AM', amount: '$820.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5672', date: '02/07/2026 at 09:00 AM', amount: '$500.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5672', date: '01/07/2026 at 10:20 AM', amount: '$1,100.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5671', date: '25/06/2026 at 10:30 AM', amount: '$1,500.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5673', date: '22/06/2026 at 09:15 AM', amount: '$450.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5672', date: '19/06/2026 at 04:45 PM', amount: '$620.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5672', date: '15/06/2026 at 12:37 PM', amount: '$1,300.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5672', date: '11/06/2026 at 02:15 PM', amount: '$1,000.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5674', date: '05/06/2026 at 11:20 AM', amount: '$3,100.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5671', date: '28/05/2026 at 01:10 PM', amount: '$850.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5675', date: '20/05/2026 at 10:00 AM', amount: '$120.00', status: 'Accepted', class: 'status-accepted' }
+        ],
+        submitted: [
+          { title: 'Mobile Deposit **5671', date: '📆 04/07/2026 at 05:40 PM', amount: '$1,250.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5672', date: '04/07/2026 at 03:15 PM', amount: '$2,450.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5673', date: '03/07/2026 at 11:15 AM', amount: '$820.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5672', date: '02/07/2026 at 09:00 AM', amount: '$500.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5671', date: '25/06/2026 at 10:30 AM', amount: '$1,500.00', status: 'Submitted', class: 'status-submitted' },
+          { title: 'Mobile Deposit **5673', date: '22/06/2026 at 09:15 AM', amount: '$450.00', status: 'Submitted', class: 'status-submitted' }
+        ],
+        accepted: [
+          { title: 'Mobile Deposit **5672', date: '01/07/2026 at 10:20 AM', amount: '$1,100.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5672', date: '19/06/2026 at 04:45 PM', amount: '$620.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5672', date: '15/06/2026 at 12:37 PM', amount: '$1,300.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5672', date: '11/06/2026 at 02:15 PM', amount: '$1,000.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5674', date: '05/06/2026 at 11:20 AM', amount: '$3,100.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5671', date: '28/05/2026 at 01:10 PM', amount: '$850.00', status: 'Accepted', class: 'status-accepted' },
+          { title: 'Mobile Deposit **5675', date: '20/05/2026 at 10:00 AM', amount: '$120.00', status: 'Accepted', class: 'status-accepted' }
+        ],
+      };
+
+      // Helper function to trigger FDIC loading screen and then redirect
+      function triggerLoadingAndRedirect(url) {
+        const loader = document.getElementById('loading-overlay');
+        if (loader) {
+          if (window.visualViewport) {
+            loader.style.width = window.visualViewport.width + 'px';
+            loader.style.height = window.visualViewport.height + 'px';
+            loader.style.left = window.visualViewport.offsetLeft + 'px';
+            loader.style.top = window.visualViewport.offsetTop + 'px';
+          }
+          loader.style.display = 'flex';
+        }
+        setTimeout(() => {
+          window.location.href = url;
+        }, 2000);
+      }
+
+      // Keep loader aligned during pinch zoom/scroll
+      function adjustLoader() {
+        const loader = document.getElementById('loading-overlay');
+        if (window.visualViewport && loader && loader.style.display !== 'none') {
+          loader.style.width = window.visualViewport.width + 'px';
+          loader.style.height = window.visualViewport.height + 'px';
+          loader.style.left = window.visualViewport.offsetLeft + 'px';
+          loader.style.top = window.visualViewport.offsetTop + 'px';
+        }
+      }
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', adjustLoader);
+        window.visualViewport.addEventListener('scroll', adjustLoader);
+      }
+
+      // Cloud and Local Shared State Sync (jsonbin.io private bin storage)
+      const BIN_ID = '6a4adaa7f5f4af5e2963eb2e';
+      const MASTER_KEY = '$2a$10$Qbi4DlUKRBmW6Yh.ZCf94.0mqlsAeoDnBPUrvmnmer47fE6i6V5Au';
+      const CLOUD_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
+
+      function getSharedState() {
+        let state = null;
+        try {
+          if (window.name) {
+            state = JSON.parse(window.name);
+          }
+        } catch (e) {}
+
+        if (!state || !state.account_balances) {
+          try {
+            const storedBalances = localStorage.getItem('account_balances');
+            const storedTxns = localStorage.getItem('custom_transactions');
+            state = {
+              account_balances: storedBalances ? JSON.parse(storedBalances) : {
+                checking: 2412563.84,
+                savings: 1354209.11,
+                investment: 1302940.50,
+                retirement: 1689451.75,
+                expense: 1245183.28
+              },
+              custom_transactions: (storedTxns && storedTxns !== "undefined") ? JSON.parse(storedTxns) : []
+            };
+          } catch (e) {
+            state = {
+              account_balances: {
+                checking: 2412563.84,
+                savings: 1354209.11,
+                investment: 1302940.50,
+                retirement: 1689451.75,
+                expense: 1245183.28
+              },
+              custom_transactions: []
+            };
+          }
+          try { window.name = JSON.stringify(state); } catch (e) {}
+        }
+        if (state && (!state.custom_transactions || state.custom_transactions === "undefined")) {
+          state.custom_transactions = [];
+        }
+        return state;
+      }
+
+      function saveSharedState(state) {
+        try {
+          window.name = JSON.stringify(state);
+        } catch (e) {}
+        try {
+          localStorage.setItem('account_balances', JSON.stringify(state.account_balances));
+          localStorage.setItem('custom_transactions', JSON.stringify(state.custom_transactions));
+        } catch (e) {}
+
+        const activeUser = localStorage.getItem('active_user_id') || 'elitecars';
+
+        // Update local database copy first
+        try {
+          const localDbStr = localStorage.getItem('bank_database');
+          let localDb = localDbStr ? JSON.parse(localDbStr) : { profiles: {} };
+          if (!localDb.profiles) localDb.profiles = {};
+          const existingProfile = localDb.profiles[activeUser] || {};
+          localDb.profiles[activeUser] = {
+            ...existingProfile,
+            ...state
+          };
+          localStorage.setItem('bank_database', JSON.stringify(localDb));
+        } catch (e) {
+          console.error('Error updating local db copy:', e);
+        }
+
+        // Fetch master registry, update current user's profile, and write back
+        fetch(CLOUD_URL, {
+          headers: { 'X-Master-Key': MASTER_KEY }
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP status ' + res.status);
+          return res.json();
+        })
+        .then(data => {
+          if (!data || !data.record) throw new Error('Invalid JSONBin response');
+          const registry = data.record || { profiles: {} };
+          if (!registry.profiles) registry.profiles = {};
+          
+          const existingProfile = registry.profiles[activeUser] || {};
+          registry.profiles[activeUser] = {
+            ...existingProfile,
+            ...state
+          };
+
+          return fetch(CLOUD_URL, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Master-Key': MASTER_KEY
+            },
+            body: JSON.stringify(registry)
+          });
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP status ' + res.status);
+          return res.json();
+        })
+        .catch(err => console.log('Cloud save error:', err));
+      }
+
+      function syncWithCloud(onUpdateCallback) {
+        const activeUser = localStorage.getItem('active_user_id') || 'elitecars';
+        fetch(CLOUD_URL, {
+          headers: {
+            'X-Master-Key': MASTER_KEY
+          }
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('HTTP status ' + res.status);
+          return res.json();
+        })
+        .then(data => {
+          if (!data || !data.record) throw new Error('Invalid JSONBin response');
+          const registry = data.record;
+          // Save a copy of the synced registry
+          localStorage.setItem('bank_database', JSON.stringify(registry));
+
+          if (registry && registry.profiles && registry.profiles[activeUser]) {
+            const cloudState = registry.profiles[activeUser];
+            // Ban check
+            if (cloudState.status === 'banned') {
+              localStorage.setItem('active_user_status', 'banned');
+              window.location.href = 'index.html?banned=true';
+              return;
+            }
+            applyCloudState(cloudState);
+          }
+        })
+        .catch(err => {
+          console.log('Cloud sync error, using local fallback:', err);
+          try {
+            const localDbStr = localStorage.getItem('bank_database');
+            if (localDbStr) {
+              const registry = JSON.parse(localDbStr);
+              if (registry && registry.profiles && registry.profiles[activeUser]) {
+                const cloudState = registry.profiles[activeUser];
+                if (cloudState.status === 'banned') {
+                  localStorage.setItem('active_user_status', 'banned');
+                  window.location.href = 'index.html?banned=true';
+                  return;
+                }
+                applyCloudState(cloudState);
+              }
+            }
+          } catch(e) {
+            console.error('Fallback sync failed:', e);
+          }
+        });
+
+        function applyCloudState(cloudState) {
+          let localTxns = [];
+          try {
+            const localStr = localStorage.getItem('custom_transactions');
+            if (localStr) localTxns = JSON.parse(localStr);
+          } catch(e){}
+
+          const cloudTxns = cloudState.custom_transactions || [];
+          const localIds = new Set(localTxns.map(t => t.id));
+          const mergedTxns = [...localTxns];
+          cloudTxns.forEach(t => {
+            if (!localIds.has(t.id)) {
+              mergedTxns.push(t);
+            }
+          });
+
+          mergedTxns.sort((a, b) => {
+            const parseDate = (dStr) => {
+              try {
+                if (dStr.includes('/')) {
+                  const parts = dStr.split(' at ');
+                  const dateParts = parts[0].split('/');
+                  const timeParts = parts[1].split(' ');
+                  const hm = timeParts[0].split(':');
+                  let h = parseInt(hm[0]);
+                  const m = parseInt(hm[1]);
+                  const isPM = timeParts[1] === 'PM';
+                  if (isPM && h < 12) h += 12;
+                  if (!isPM && h === 12) h = 0;
+                  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0], h, m);
+                } else {
+                  return new Date(dStr.replace(' at ', ' '));
+                }
+              } catch(e) {
+                return new Date(0);
+              }
+            };
+            return parseDate(b.date) - parseDate(a.date);
+          });
+
+          const cloudIds = new Set(cloudTxns.map(t => t.id));
+          const pendingTxns = localTxns.filter(t => !cloudIds.has(t.id));
+          
+          let accountBalances = cloudState.account_balances;
+          if (pendingTxns.length > 0) {
+            try {
+              const localBalStr = localStorage.getItem('account_balances');
+              if (localBalStr) accountBalances = JSON.parse(localBalStr);
+            } catch(e){}
+          }
+
+          const mergedState = {
+            ...cloudState,
+            account_balances: accountBalances,
+            custom_transactions: mergedTxns
+          };
+
+          try { window.name = JSON.stringify(mergedState); } catch(e){}
+          try {
+            localStorage.setItem('account_balances', JSON.stringify(accountBalances));
+            localStorage.setItem('custom_transactions', JSON.stringify(mergedTxns));
+            localStorage.setItem('active_user_fullname', cloudState.full_name || '');
+            localStorage.setItem('active_user_status', cloudState.status || 'active');
+          } catch(e){}
+
+          if (onUpdateCallback) onUpdateCallback(mergedState);
+        }
+      }
+
+      function getBalances() {
+        return getSharedState().account_balances;
+      }
+
+      function formatCurrency(val) {
+        return '$' + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function updateDashboardBalances() {
+        const balances = getBalances();
+        const total = balances.checking + balances.savings + balances.investment + balances.retirement + balances.expense;
+
+        // Update total assets in donut chart center text
+        const totalTextEls = document.querySelectorAll('text');
+        totalTextEls.forEach(text => {
+          if (text.textContent.includes('$8,004,348.48') || text.textContent.includes('$2,004,348.48') || (text.textContent.startsWith('$') && text.getAttribute('font-size') === '8')) {
+            text.textContent = formatCurrency(total);
+          }
+        });
+
+        // Update individual card values in DOM
+        const checkingCards = document.querySelectorAll('[data-id="checking"] .balance-val');
+        checkingCards.forEach(c => c.textContent = formatCurrency(balances.checking));
+
+        const savingsCards = document.querySelectorAll('[data-id="savings"] .balance-val');
+        savingsCards.forEach(c => c.textContent = formatCurrency(balances.savings));
+
+        const investmentCard = document.querySelector('[data-id="investment"] .balance-val');
+        if (investmentCard) investmentCard.textContent = formatCurrency(balances.investment);
+
+        const retirementCard = document.querySelector('[data-id="retirement"] .balance-val');
+        if (retirementCard) retirementCard.textContent = formatCurrency(balances.retirement);
+
+        const expenseCard = document.querySelector('[data-id="expense"] .balance-val');
+        if (expenseCard) expenseCard.textContent = formatCurrency(balances.expense);
+
+        // Update JS accountsData
+        accountsData.checking.curr = formatCurrency(balances.checking);
+        accountsData.checking.avail = formatCurrency(balances.checking);
+
+        accountsData.savings.curr = formatCurrency(balances.savings);
+        accountsData.savings.avail = formatCurrency(balances.savings);
+
+        accountsData.investment.curr = formatCurrency(balances.investment);
+        accountsData.retirement.curr = formatCurrency(balances.retirement);
+        accountsData.expense.curr = formatCurrency(balances.expense);
+
+        // Recalculate percentages
+        accountsData.checking.pct = ((balances.checking / total) * 100).toFixed(2) + '%';
+        accountsData.savings.pct = ((balances.savings / total) * 100).toFixed(2) + '%';
+        accountsData.investment.pct = ((balances.investment / total) * 100).toFixed(2) + '%';
+        accountsData.retirement.pct = ((balances.retirement / total) * 100).toFixed(2) + '%';
+        accountsData.expense.pct = ((balances.expense / total) * 100).toFixed(2) + '%';
+      }
+
+      function updateWelcomeMessage() {
+        const welcomeText = document.getElementById('welcome-text-msg');
+        if (welcomeText) {
+          const fullName = localStorage.getItem('active_user_fullname') || 'Elite Cars Antiques';
+          welcomeText.textContent = 'Welcome back, ' + fullName;
+        }
+      }
+
+      // Welcome Message and Ban Protection check
+      if (localStorage.getItem('active_user_status') === 'banned') {
+        window.location.href = 'index.html?banned=true';
+      }
+      updateWelcomeMessage();
+
+      // Initial balances load
+      updateDashboardBalances();
+      updateMessagesBadge();
+      syncWithCloud(() => {
+        updateDashboardBalances();
+        updateWelcomeMessage();
+        updateMessagesBadge();
+        const activeTab = document.querySelector('.filter-tab.active');
+        const filterType = activeTab ? activeTab.textContent.toLowerCase() : 'submitted';
+        renderHistory(filterType, searchBox ? searchBox.value : '');
+      });
+
+      // Poll every 15s so admin changes (balance, transactions) reflect automatically
+      setInterval(() => {
+        syncWithCloud(() => {
+          updateDashboardBalances();
+          updateWelcomeMessage();
+          updateMessagesBadge();
+          const activeTab = document.querySelector('.filter-tab.active');
+          const filterType = activeTab ? activeTab.textContent.toLowerCase() : 'submitted';
+          renderHistory(filterType, searchBox ? searchBox.value : '');
+        });
+      }, 15000);
+
+      // 1. Sidebar menu collapse/expand & active state
+      const menuLinks = document.querySelectorAll('.menu-item-link');
+      menuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = link.getAttribute('href');
+          if (href && href !== '#') {
+            triggerLoadingAndRedirect(href);
+            return;
+          }
+
+          // Toggle submenus for links that have them
+          const parentLi = link.parentElement;
+          const submenu = parentLi.querySelector('.submenu');
+          const chevron = link.querySelector('.menu-chevron');
+
+          if (submenu) {
+            const isVisible = submenu.style.display === 'block';
+            submenu.style.display = isVisible ? 'none' : 'block';
+            if (chevron) {
+              chevron.style.transform = isVisible ? 'none' : 'rotate(180deg)';
+            }
+          } else {
+            // Set active state for links without submenu
+            menuLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+          }
+        });
+      });
+
+
+
+      // 4. Section collapsible toggles
+      const sectionToggles = document.querySelectorAll('.section-toggle');
+      sectionToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const sectionContainer = toggle.closest('.section-container');
+          const targetContentGrid = sectionContainer.querySelector('.accounts-grid');
+          const targetContentBox = sectionContainer.querySelector('.asset-summary-box');
+
+          toggle.classList.toggle('collapsed');
+          if (targetContentGrid) {
+            targetContentGrid.classList.toggle('collapsed');
+          }
+          if (targetContentBox) {
+            targetContentBox.classList.toggle('collapsed');
+          }
+        });
+      });
+
+      // 5. Account selection and Asset Summary update
+      const accountCards = document.querySelectorAll('.account-card');
+      const detailsColor = document.querySelector('.details-color-indicator');
+      const detailsName = document.querySelector('.details-account-name');
+      const detailsNum = document.querySelector('.details-grid div:nth-child(2)');
+      const detailsPct = document.querySelector('.details-grid div:nth-child(4)');
+      const detailsCurr = document.querySelector('.details-grid div:nth-child(6)');
+
+      // Target available rows
+      const availableLabel = document.querySelector('.details-grid div:nth-child(7)');
+      const availableVal = document.querySelector('.details-grid div:nth-child(8)');
+
+      accountCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+          // Do not select if clicking options menu
+          if (e.target.closest('.card-options-wrapper') || e.target.closest('.card-dropdown-menu')) {
+            return;
+          }
+
+          accountCards.forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+
+          const accountId = card.getAttribute('data-id');
+          const data = accountsData[accountId];
+
+          if (data) {
+            // Update Legend panel elements
+            detailsColor.style.backgroundColor = data.color;
+            detailsName.textContent = data.name;
+            detailsNum.textContent = data.num;
+            detailsPct.textContent = data.pct;
+            detailsCurr.textContent = data.curr;
+
+            // Handle Available Balance row display
+            if (data.avail !== null) {
+              availableLabel.style.display = 'block';
+              availableVal.style.display = 'block';
+              availableVal.textContent = data.avail;
+            } else {
+              availableLabel.style.display = 'none';
+              availableVal.style.display = 'none';
+            }
+
+            // Highlight corresponding segment in SVG donut chart
+            const donutChecking = document.querySelector('.donut-chart-container circle:nth-child(1)');
+            const donutSavings = document.querySelector('.donut-chart-container circle:nth-child(2)');
+            const donutInvestment = document.querySelector('.donut-chart-container circle:nth-child(3)');
+            const donutRetirement = document.querySelector('.donut-chart-container circle:nth-child(4)');
+            const donutExpense = document.querySelector('.donut-chart-container circle:nth-child(5)');
+
+            // Reset stroke-widths
+            donutChecking.setAttribute('stroke-width', '14');
+            donutSavings.setAttribute('stroke-width', '14');
+            donutInvestment.setAttribute('stroke-width', '14');
+            donutRetirement.setAttribute('stroke-width', '14');
+            donutExpense.setAttribute('stroke-width', '14');
+
+            // Apply hover/highlight based on ID
+            if (accountId === 'checking') {
+              donutChecking.setAttribute('stroke-width', '18');
+            } else if (accountId === 'savings') {
+              donutSavings.setAttribute('stroke-width', '18');
+            } else if (accountId === 'investment') {
+              donutInvestment.setAttribute('stroke-width', '18');
+            } else if (accountId === 'retirement') {
+              donutRetirement.setAttribute('stroke-width', '18');
+            } else if (accountId === 'expense') {
+              donutExpense.setAttribute('stroke-width', '18');
+            }
+          }
+        });
+      });
+
+      // Default highlight for checking on load
+      const defaultDonutCheck = document.querySelector('.donut-chart-container circle:nth-child(1)');
+      if (defaultDonutCheck) {
+        defaultDonutCheck.setAttribute('stroke-width', '18');
+      }
+
+      // 6. Card dropdown options
+      const optionsButtons = document.querySelectorAll('.card-options-btn');
+      optionsButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const currentMenu = btn.parentElement.querySelector('.card-dropdown-menu');
+
+          // Close other open menus
+          document.querySelectorAll('.card-dropdown-menu').forEach(m => {
+            if (m !== currentMenu) m.classList.remove('show');
+          });
+
+          currentMenu.classList.toggle('show');
+        });
+      });
+
+      // Dropdown items click commands
+      const dropdownItems = document.querySelectorAll('.card-dropdown-item');
+      dropdownItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const card = item.closest('.account-card');
+          const accountTitle = card.querySelector('.account-name').textContent;
+          const dropdown = item.parentElement;
+          dropdown.classList.remove('show');
+
+          if (item.classList.contains('cmd-view')) {
+            const cleanTitle = accountTitle.split('**')[0].trim();
+            const accountMap = {
+              'Checking': 'checking',
+              'Savings': 'savings',
+              'Investment Account': 'investment',
+              'Retirement Savings': 'retirement',
+              'Expense Account': 'expense'
+            };
+            const param = accountMap[cleanTitle] || 'all';
+            triggerLoadingAndRedirect(`transactions.html?account=${param}`);
+          } else if (item.classList.contains('cmd-transfer')) {
+            const cleanTitle = accountTitle.split('**')[0].trim();
+            const accountMap = {
+              'Checking': 'checking',
+              'Savings': 'savings',
+              'Investment Account': 'investment',
+              'Retirement Savings': 'retirement',
+              'Expense Account': 'expense'
+            };
+            const param = accountMap[cleanTitle] || 'all';
+            triggerLoadingAndRedirect(`transfer.html?source=${param}`);
+          } else if (item.classList.contains('cmd-rename')) {
+            const newName = prompt(`Enter new nickname for ${accountTitle}:`, accountTitle);
+            if (newName && newName.trim() !== '') {
+              card.querySelector('.account-name').textContent = newName.trim();
+            }
+          }
+        });
+      });
+
+      // Close dropdown menus on clicking elsewhere
+      document.addEventListener('click', () => {
+        document.querySelectorAll('.card-dropdown-menu').forEach(m => m.classList.remove('show'));
+      });
+
+      // 7. Deposit History filters & dynamic render
+      const filterTabButtons = document.querySelectorAll('.filter-tab');
+      const historyBody = document.querySelector('.history-body');
+      const noHistoryPlaceholder = document.querySelector('.no-history-text');
+      const searchBox = document.querySelector('.search-input');
+
+      // Create a container to render transactions list dynamically
+      const historyListContainer = document.createElement('div');
+      historyListContainer.className = 'history-list';
+      noHistoryPlaceholder.parentElement.appendChild(historyListContainer);
+
+      function renderHistory(filter, searchQuery = '') {
+        const query = searchQuery.trim().toLowerCase();
+        historyListContainer.innerHTML = '';
+
+        // Load custom transactions from shared state
+        const state = getSharedState();
+        const customTxns = state.custom_transactions || [];
+        
+        // Map custom transactions to the layout of dashboard history items
+        const mappedCustomTxns = customTxns.map(txn => {
+          let statusClass = 'status-' + txn.status.toLowerCase();
+          return {
+            title: txn.desc,
+            date: txn.date,
+            amount: txn.amount,
+            status: txn.status,
+            class: statusClass
+          };
+        });
+
+        // Filter out static transactionsHistory items that are already in custom transactions (matching key/amount)
+        const customKeys = new Set(customTxns.map(t => {
+          const d = t.date.replace(/[📆\s]/g, '').toLowerCase();
+          const a = t.amount.replace(/[+\-$,\s]/g, '').toLowerCase();
+          return `${d}-${a}`;
+        }));
+
+        const filterStatic = (item) => {
+          const d = item.date.replace(/[📆\s]/g, '').toLowerCase();
+          const a = item.amount.replace(/[+\-$,\s]/g, '').toLowerCase();
+          return !customKeys.has(`${d}-${a}`);
+        };
+
+        // Merge custom transactions into list
+        const allItems = [...mappedCustomTxns, ...transactionsHistory.all.filter(filterStatic)];
+        const submittedItems = [
+          ...mappedCustomTxns.filter(t => t.status.toLowerCase() === 'processing' || t.status.toLowerCase() === 'submitted'),
+          ...transactionsHistory.submitted.filter(filterStatic)
+        ];
+        const acceptedItems = [
+          ...mappedCustomTxns.filter(t => t.status.toLowerCase() === 'accepted' || t.status.toLowerCase() === 'completed'),
+          ...transactionsHistory.accepted.filter(filterStatic)
+        ];
+
+        let items = [];
+        if (filter === 'all') {
+          items = allItems;
+        } else if (filter === 'submitted') {
+          items = submittedItems;
+        } else if (filter === 'accepted') {
+          items = acceptedItems;
+        }
+
+        if (query) {
+          items = items.filter(item =>
+            item.title.toLowerCase().includes(query) ||
+            item.amount.toLowerCase().includes(query) ||
+            item.status.toLowerCase().includes(query)
+          );
+        }
+
+        if (items.length === 0) {
+          noHistoryPlaceholder.style.display = 'block';
+          noHistoryPlaceholder.textContent = query ? 'No matching transactions found.' : 'No History Available';
+        } else {
+          noHistoryPlaceholder.style.display = 'none';
+          items.forEach(item => {
+            const itemHTML = `
+              <div class="history-item">
+                <div class="history-item-left">
+                  <span class="history-item-title">${item.title}</span>
+                  <span class="history-item-date">${item.date}</span>
+                </div>
+                <div class="history-item-right">
+                  <div class="history-item-amount">${item.amount}</div>
+                  <span class="history-item-status ${item.class}">${item.status}</span>
+                </div>
+              </div>
+            `;
+            historyListContainer.insertAdjacentHTML('beforeend', itemHTML);
+          });
+        }
+      }
+
+      // Tab selection event
+      filterTabButtons.forEach(tab => {
+        tab.addEventListener('click', () => {
+          filterTabButtons.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const filterType = tab.textContent.toLowerCase();
+          renderHistory(filterType, searchBox.value);
+        });
+      });
+
+      // Search event listener
+      searchBox.addEventListener('input', () => {
+        const activeTab = document.querySelector('.filter-tab.active');
+        const filterType = activeTab.textContent.toLowerCase();
+        renderHistory(filterType, searchBox.value);
+      });
+
+      // Initial render based on active tab ("Submitted")
+      renderHistory('submitted');
+
+      // 8. Help float button modal toggle
+      const helpBtn = document.querySelector('.help-float-btn');
+      const supportModal = document.getElementById('support-modal');
+      const supportCloseX = document.getElementById('support-modal-close-x');
+      const supportCloseBtn = document.getElementById('support-modal-close-btn');
+
+      function openModal() {
+        supportModal.classList.add('show');
+      }
+
+      function closeModal() {
+        supportModal.classList.remove('show');
+      }
+
+      if (helpBtn) helpBtn.addEventListener('click', openModal);
+      if (supportCloseX) supportCloseX.addEventListener('click', closeModal);
+      if (supportCloseBtn) supportCloseBtn.addEventListener('click', closeModal);
+
+      supportModal.addEventListener('click', (e) => {
+        if (e.target === supportModal) closeModal();
+      });
+
+      // 9. Transfer Money link click
+      const transferCard = document.querySelector('.transfer-link-card');
+      if (transferCard) {
+        transferCard.addEventListener('click', (e) => {
+          e.preventDefault();
+          triggerLoadingAndRedirect('transfer.html');
+        });
+      }
+
+      // 9b. View Transactions details-link click
+      const detailsLink = document.querySelector('.details-link');
+      if (detailsLink) {
+        detailsLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          triggerLoadingAndRedirect(detailsLink.getAttribute('href'));
+        });
+      }
+
+      // 10. Mobile Menu toggle
+      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+      const sidebar = document.querySelector('.sidebar');
+      if (mobileMenuToggle && sidebar) {
+        mobileMenuToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = sidebar.classList.toggle('show');
+          if (isOpen) {
+            document.body.classList.add('no-scroll');
+          } else {
+            document.body.classList.remove('no-scroll');
+          }
+        });
+
+        // Close sidebar when clicking outside of it on mobile
+        document.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            if (!sidebar.contains(e.target) && e.target !== mobileMenuToggle && !mobileMenuToggle.contains(e.target)) {
+              sidebar.classList.remove('show');
+              document.body.classList.remove('no-scroll');
+            }
+          }
+        });
+      }
+
+      function updateMessagesBadge() {
+        const state = getSharedState();
+        const txns = state.custom_transactions || [];
+        
+        let readIds = [];
+        try {
+          const readStr = localStorage.getItem('read_message_ids');
+          if (readStr) readIds = JSON.parse(readStr);
+        } catch(e){}
+
+        let clearedIds = [];
+        try {
+          const clearedStr = localStorage.getItem('cleared_message_ids');
+          if (clearedStr) clearedIds = JSON.parse(clearedStr);
+        } catch(e){}
+
+        const visibleTxns = txns.filter(t => !clearedIds.includes(t.id));
+        const unreadCount = visibleTxns.filter(t => !readIds.includes(t.id)).length;
+        
+        const messagesBadge = document.getElementById('messages-badge');
+        if (messagesBadge) {
+          if (unreadCount > 0) {
+            messagesBadge.textContent = unreadCount;
+            messagesBadge.style.display = 'flex';
+          } else {
+            messagesBadge.style.display = 'none';
+          }
+        }
+      }
+    });
+  </script>
+  <!-- Fullscreen Loading Overlay -->
+  <style>
+    body.no-scroll {
+      overflow: hidden !important;
+      height: 100% !important;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @media (max-width: 480px) {
+      #loading-overlay img {
+        height: 50px !important;
+        margin-bottom: 20px !important;
+      }
+      #loading-overlay div:last-child {
+        font-size: 11px !important;
+        padding: 16px 12px !important;
+      }
+      #loading-overlay div:last-child span:first-child {
+        font-size: 9px !important;
+        padding: 1px 4px !important;
+        margin-right: 4px !important;
+      }
+    }
+  </style>
+  <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background-color: #003E7E; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: #FFFFFF; font-family: Arial, sans-serif;">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
+      <img src="Icon2.png" alt="Banner Bank Logo" style="height: 70px; margin-bottom: 30px; animation: pulse 1.5s infinite ease-in-out;">
+      <!-- Loading spinner -->
+      <div style="width: 40px; height: 40px; border: 3px solid rgba(255, 255, 255, 0.2); border-top-color: #FFFFFF; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+    </div>
+    <!-- FDIC footer block in the loader -->
+    <div style="padding: 24px 20px; text-align: center; font-size: 13px; opacity: 0.9; border-top: 1px solid rgba(255, 255, 255, 0.1); width: 100%; box-sizing: border-box; background-color: rgba(0, 0, 0, 0.15);">
+      <span style="background-color: #FFFFFF; color: #003E7E; font-weight: bold; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-right: 8px; display: inline-block; vertical-align: middle; line-height: 1;">FDIC</span>
+      <span style="display: inline-block; vertical-align: middle;">FDIC-Insured - Backed by the full faith and credit of the U.S. Government</span>
+    </div>
+  </div>
+</body>
+
+</html>
